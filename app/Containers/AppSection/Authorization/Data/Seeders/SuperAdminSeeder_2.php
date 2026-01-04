@@ -21,15 +21,15 @@ final class SuperAdminSeeder_2 extends ParentSeeder
         $user_super_admin->markEmailAsVerified();
         $user_super_admin->save();
 
-        $user_educator = $createUserTask->run([
-            'email' => 'educator@educator.com',
-            'password' => 'educator123',
-            'name' => 'Educator',
-        ]);
-        $role_educator = RoleModel::findByName(Role::EDUCATOR->value, 'api');
-        $user_educator->assignRole($role_educator);
-        $user_educator->markEmailAsVerified();
-        $user_educator->save();
+        // $user_educator = $createUserTask->run([
+        //     'email' => 'educator@educator.com',
+        //     'password' => 'educator123',
+        //     'name' => 'Educator',
+        // ]);
+        // $role_educator = RoleModel::findByName(Role::EDUCATOR->value, 'api');
+        // $user_educator->assignRole($role_educator);
+        // $user_educator->markEmailAsVerified();
+        // $user_educator->save();
 
     }
 }

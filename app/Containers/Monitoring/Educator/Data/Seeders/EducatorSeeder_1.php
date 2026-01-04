@@ -10,16 +10,16 @@ final class EducatorSeeder_1 extends ParentSeeder
 {
     public function run(): void
     {
-        Educator::firstOrCreate(
-            ['dni' => '12345678'],
-            [
-                'first_name' => 'Ana',
-                'last_name' => 'López Mamani',
-                'gender' => Gender::FEMALE,
-                'birth' => '1990-05-15',
-                'state' => 'Activo',
-                'phone' => '+591 71234567',
-            ]
-        );
+        // Educator::firstOrCreate(
+        //     ['dni' => '12345678'],
+        //     [
+        //         'first_name' => 'Ana',
+        //         'last_name' => 'López',
+        //         'gender' => Gender::FEMALE,
+        //         'birth' => '1990-05-15',
+        //         'state' => 'Activo',
+        //         'phone' => '+591 71234567',
+        //     ]
+        // );
     }
 }
