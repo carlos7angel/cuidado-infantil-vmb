@@ -1,0 +1,6 @@
+{
+    "name": "apiato/childenrollment",
+    "description": "ChildEnrollment Container",
+    "type": "apiato-container",
+    "require": {}
+}

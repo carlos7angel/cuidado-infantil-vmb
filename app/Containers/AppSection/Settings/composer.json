@@ -1,0 +1,6 @@
+{
+    "name": "apiato/settings",
+    "description": "Settings Container",
+    "type": "apiato-container",
+    "require": {}
+}

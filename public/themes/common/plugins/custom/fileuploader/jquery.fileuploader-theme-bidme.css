@@ -1,0 +1,7 @@
+.fileuploader-input .fileuploader-input-button, .fileuploader-popup .fileuploader-popup-header .fileuploader-popup-button.button-success {
+    background: #EF7103;
+    background-size: 140% auto;
+    background-position: center;
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .04)
+}

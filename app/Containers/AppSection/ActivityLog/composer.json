@@ -1,0 +1,6 @@
+{
+    "name": "apiato/activitylog",
+    "description": "ActivityLog Container",
+    "type": "apiato-container",
+    "require": {}
+}

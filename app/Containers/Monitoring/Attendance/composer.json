@@ -1,0 +1,6 @@
+{
+    "name": "apiato/attendance",
+    "description": "Attendance Container",
+    "type": "apiato-container",
+    "require": {}
+}

@@ -1,0 +1,6 @@
+{
+    "name": "apiato/childvaccination",
+    "description": "ChildVaccination Container",
+    "type": "apiato-container",
+    "require": {}
+}

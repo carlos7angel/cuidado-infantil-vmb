@@ -1,0 +1,25 @@
+:root{
+    --bs-app-toolbar-bg: #883f7e;
+    --bs-primary: #883f7e;
+    --bs-primary-active: #77376e;
+
+    --bs-pagination-active-bg: #883f7e;
+}
+.active>.page-link, .page-link.active {
+    background-color: #883f7e !important;
+}
+
+@media (min-width: 992px) {
+    .menu-lg-row>.menu-item.here {
+        background-color: #f4f4f4;
+        padding: 0 20px;
+    }
+    .app-header-menu .menu>.menu-item.here >.menu-link {
+        margin-right: 0;
+    }
+}
+
+/*.app-footer {*/
+/*    position: absolute;*/
+/*    bottom: 0;*/
+/*}*/

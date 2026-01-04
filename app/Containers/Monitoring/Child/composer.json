@@ -1,0 +1,6 @@
+{
+    "name": "apiato/child",
+    "description": "Child Container",
+    "type": "apiato-container",
+    "require": {}
+}

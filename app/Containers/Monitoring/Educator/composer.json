@@ -1,0 +1,6 @@
+{
+    "name": "apiato/educator",
+    "description": "Educator Container",
+    "type": "apiato-container",
+    "require": {}
+}

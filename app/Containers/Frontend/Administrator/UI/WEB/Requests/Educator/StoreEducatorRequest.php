@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator;
+
+use App\Containers\AppSection\User\Enums\Gender;
+use App\Ship\Parents\Requests\Request as ParentRequest;
+use Illuminate\Validation\Rule;
+
+final class StoreEducatorRequest extends ParentRequest
+{
+    protected array $decode = [];
+
+    protected array $urlParameters = [
+        'id',
+    ];
+
+    public function rules(): array
+    {
+        $rules = [
+            'email' => 'required|email|unique:users,email',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'gender' => ['required', Rule::enum(Gender::class)],
+            'birth' => 'required|date_format:d/m/Y',
+            'state' => 'nullable|string|max:255',
+            'dni' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'childcare_center_ids' => 'required|array|min:1',
+            'childcare_center_ids.*' => 'required|exists:childcare_centers,id',
+        ];
+
+        // Si es edición, el email puede ser el mismo (pero solo para este educator)
+        $id = $this->route('id') ?? $this->input('id');
+        if ($id) {
+            // En edición no actualizamos el email (está vinculado al usuario)
+            // Removemos la regla de email ya que no se actualiza
+            unset($rules['email']);
+        }
+
+        return $rules;
+    }
+
+    public function authorize(): bool
+    {
+        return true;
+    }
+}
+

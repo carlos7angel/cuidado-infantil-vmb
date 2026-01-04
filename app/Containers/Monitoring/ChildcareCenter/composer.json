@@ -1,0 +1,6 @@
+{
+    "name": "apiato/childcarecenter",
+    "description": "ChildcareCenter Container",
+    "type": "apiato-container",
+    "require": {}
+}

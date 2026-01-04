@@ -1,0 +1,6 @@
+{
+    "name": "apiato/nutritionalassessment",
+    "description": "NutritionalAssessment Container",
+    "type": "apiato-container",
+    "require": {}
+}
