@@ -20,7 +20,8 @@ return new class() extends Migration {
 
             // Índices para consultas frecuentes
             $table->index('evaluation_id'); // Cargar todos los puntajes de una evaluación
-            $table->index(['area', 'status']); // Análisis por área y estado
+            $table->index('area'); // Análisis por área
+            $table->index('status'); // Análisis por estado
         });
     }
 

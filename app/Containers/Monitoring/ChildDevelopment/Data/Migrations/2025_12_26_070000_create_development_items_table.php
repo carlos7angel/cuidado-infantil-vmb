@@ -16,7 +16,8 @@ return new class() extends Migration {
             $table->text('description'); // Texto oficial del ítem
 
             // Índices para búsquedas eficientes
-            $table->index(['area', 'age_min_months', 'age_max_months']); // Buscar ítems por área y rango de edad
+            $table->index(['area', 'age_min_months']); // Buscar ítems por área y edad mínima
+            $table->index('age_max_months'); // Edad máxima
             $table->unique(['item_number', 'area']); // Un ítem único por número y área
         });
     }
