@@ -17,10 +17,10 @@
                             </p>
                             <p style="margin-top:0; color:#5E6278; margin-bottom:13px">A continuación, encontrará sus datos de acceso, se le recomienda cambiar la contraseña una vez ingresado al sistema.</p>
                         </div>
-                        <div style="background: #F9F9F9; border-radius: 12px; padding:15px 30px">
-                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 16px; font-weight:700">Usuario: {!! $user->email !!}</p>
-                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 16px; font-weight:700">Contraseña: {!! $password !!}</p>   
-                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 16px; font-weight:700">URL Servidor: {!! $host !!}</p>
+                        <div style="text-align:start; background: #F9F9F9; border-radius: 12px; padding:15px 30px">
+                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 14px; font-weight:700">Usuario: {!! $user->email !!}</p>
+                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 14px; font-weight:700">Contraseña: {!! $password !!}</p>   
+                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 14px; font-weight:700">URL Servidor: {!! $url !!}</p>
                         </div>
                     </div>
                 </td>

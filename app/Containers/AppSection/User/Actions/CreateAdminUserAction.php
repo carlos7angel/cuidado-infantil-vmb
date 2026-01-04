@@ -3,11 +3,12 @@
 namespace App\Containers\AppSection\User\Actions;
 
 use App\Containers\AppSection\Authorization\Enums\Role;
-use App\Containers\AppSection\User\Events\AdminUserCreatedEvent;
+use App\Containers\AppSection\User\Mails\AdminUserCreatedMail;
 use App\Containers\AppSection\User\Tasks\CreateUserTask;
 use App\Ship\Parents\Actions\Action as ParentAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 final class CreateAdminUserAction extends ParentAction
 {
@@ -51,8 +52,10 @@ final class CreateAdminUserAction extends ParentAction
         $role = $data['user_role'] === 'municipal_admin' ? Role::MUNICIPAL_ADMIN : Role::CHILDCARE_ADMIN;
         $user->assignRole($role);
 
-        // Disparar evento para envío de email (si está habilitado)
-        AdminUserCreatedEvent::dispatch($user, $password, $data['send_email'] ?? false);
+        // Send email to admin (if enabled)
+        if ($data['send_email'] ?? false) {
+            Mail::send(new AdminUserCreatedMail($user, $password));
+        }
 
         return [
             'user' => $user,

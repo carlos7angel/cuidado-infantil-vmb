@@ -4,16 +4,11 @@ namespace App\Containers\AppSection\User\Mails;
 
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Parents\Mails\Mail as ParentMail;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
 
-final class AdminUserCreatedMail extends ParentMail implements ShouldQueue
+final class AdminUserCreatedMail extends ParentMail
 {
-    use Queueable, SerializesModels;
 
     public function __construct(
         public readonly User $user,

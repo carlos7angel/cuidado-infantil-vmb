@@ -4,14 +4,15 @@ namespace App\Containers\Monitoring\Educator\Tasks;
 
 use App\Containers\AppSection\Authorization\Enums\Role as RoleEnum;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
-use App\Containers\AppSection\User\Events\EducatorUserCreatedEvent;
 use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Mails\EducatorUserCreatedEmail;
 use App\Containers\AppSection\User\Tasks\CreateUserTask;
 use App\Containers\Monitoring\Educator\Data\Repositories\EducatorRepository;
 use App\Containers\Monitoring\Educator\Events\EducatorCreated;
 use App\Containers\Monitoring\Educator\Models\Educator;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 final class CreateEducatorWebTask extends ParentTask
@@ -75,7 +76,7 @@ final class CreateEducatorWebTask extends ParentTask
             }
 
             // Send email to educator
-            EducatorUserCreatedEvent::dispatch($user, $educator, $password);
+            Mail::send(new EducatorUserCreatedEmail($user, $educator, $password));
 
             return [
                 'educator' => $educator,
