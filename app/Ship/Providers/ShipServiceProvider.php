@@ -14,6 +14,8 @@ final class ShipServiceProvider extends ParentServiceProvider
 {
     public function boot(): void
     {
+        \Illuminate\Support\Facades\Schema::defaultStringLength(191);
+
         $this->registerMacros();
         RequestException::dontTruncate();
         Date::use(CarbonImmutable::class);
