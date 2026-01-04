@@ -100,8 +100,6 @@ return new class() extends Migration {
             $table->index('incident_date');
             $table->index('reported_by');
             $table->index('childcare_center_id');
-            $table->index('status'); // Consultas por estado
-            $table->index('severity_level'); // Consultas por severidad
             $table->index(['child_id', 'incident_date']); // Este índice compuesto es pequeño y seguro
         });
     }
