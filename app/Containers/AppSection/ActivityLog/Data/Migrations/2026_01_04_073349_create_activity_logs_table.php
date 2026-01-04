@@ -17,7 +17,7 @@ return new class() extends Migration {
             $table->json('properties')->nullable();
             $table->uuid('batch_uuid')->nullable();
             $table->string('ip_address', 50)->nullable();
-            $table->string('user_agent', 255)->nullable();
+            $table->text('user_agent')->nullable();
             $table->index('log_name');
             $table->timestamps();
         });
