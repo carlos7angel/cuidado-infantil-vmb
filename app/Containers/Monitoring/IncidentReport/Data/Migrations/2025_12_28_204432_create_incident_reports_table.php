@@ -14,16 +14,16 @@ return new class() extends Migration {
             $table->string('code', 20)->unique()->comment('Código único para seguimiento del incidente');
             
             // Estado del reporte (enum: reportado, en_revision, cerrado, escalado, archivado)
-            $table->string('status')->default('reportado')->comment('Estado: reportado, en_revision, cerrado, escalado, archivado');
+            $table->string('status', 50)->default('reportado')->comment('Estado: reportado, en_revision, cerrado, escalado, archivado');
             
             // Relación con el niño
             $table->foreignId('child_id')->constrained()->cascadeOnDelete()->comment('Niño involucrado en el incidente');
             
             // Tipo de incidente (enum: accidente, conducta_inapropiada, lesion_fisica, negligencia, maltrato_psicologico, maltrato_fisico, otro)
-            $table->string('type')->comment('Tipo: accidente, conducta_inapropiada, lesion_fisica, negligencia, maltrato_psicologico, maltrato_fisico, otro');
+            $table->string('type', 50)->comment('Tipo: accidente, conducta_inapropiada, lesion_fisica, negligencia, maltrato_psicologico, maltrato_fisico, otro');
             
             // Nivel de gravedad (enum: leve, moderado, grave, critico)
-            $table->string('severity_level')->comment('Nivel de gravedad: leve, moderado, grave, critico');
+            $table->string('severity_level', 50)->comment('Nivel de gravedad: leve, moderado, grave, critico');
             
             // Descripción del incidente
             $table->text('description')->comment('Descripción detallada del incidente');
@@ -33,7 +33,7 @@ return new class() extends Migration {
             $table->time('incident_time')->nullable()->comment('Hora en que ocurrió el incidente');
             
             // Lugar del incidente
-            $table->string('incident_location')->nullable()->comment('Lugar donde ocurrió el incidente');
+            $table->string('incident_location', 191)->nullable()->comment('Lugar donde ocurrió el incidente');
             
             // Personas involucradas y testigos
             $table->text('people_involved')->nullable()->comment('Personas involucradas en el incidente');
@@ -68,7 +68,7 @@ return new class() extends Migration {
             
             // Escalamiento
             $table->date('escalated_date')->nullable()->comment('Fecha en que se escaló el incidente');
-            $table->string('escalated_to')->nullable()->comment('A quién se escaló (nombre o cargo)');
+            $table->string('escalated_to', 191)->nullable()->comment('A quién se escaló (nombre o cargo)');
             $table->text('escalation_reason')->nullable()->comment('Razón del escalamiento');
             
             // Notificación a autoridades
@@ -100,8 +100,9 @@ return new class() extends Migration {
             $table->index('incident_date');
             $table->index('reported_by');
             $table->index('childcare_center_id');
-            $table->index(['status', 'severity_level']);
-            $table->index(['child_id', 'incident_date']);
+            $table->index('status'); // Consultas por estado
+            $table->index('severity_level'); // Consultas por severidad
+            $table->index(['child_id', 'incident_date']); // Este índice compuesto es pequeño y seguro
         });
     }
 
