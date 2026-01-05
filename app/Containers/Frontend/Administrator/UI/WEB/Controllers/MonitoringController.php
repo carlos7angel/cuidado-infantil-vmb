@@ -121,7 +121,7 @@ final class MonitoringController extends WebController
             // Mapear todos los items: si está en la evaluación Y es acumulado hasta la edad, achieved=true; si no está acumulado, es "no evaluable"
             $itemsHistory = $allItems->map(function ($developmentItem) use ($evaluationItems, $item) {
                 $evaluationItem = $evaluationItems->get($developmentItem->id);
-                $isAccumulatedUpToAge = $developmentItem->age_max_months <= $item->age_months;
+                $isAccumulatedUpToAge = $developmentItem->isAccumulatedUpToAge($item->age_months);
                 
                 return (object) [
                     'development_item' => $developmentItem,

@@ -104,7 +104,7 @@ final class DevelopmentItem extends ParentModel
      */
     public function isAccumulatedUpToAge(int $ageMonths): bool
     {
-        return $this->age_max_months <= $ageMonths;
+        return $this->age_min_months <= $ageMonths;
     }
 
     /**

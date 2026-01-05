@@ -95,7 +95,7 @@ final class CreateChildDevelopmentAction extends ParentAction
         foreach ($developmentItems as $item) {
             // Un ítem es válido si su edad máxima es menor o igual a la edad del niño
             // Esto significa que el ítem debería haberse alcanzado hasta esa edad
-            if ($item->age_max_months <= $ageMonths) {
+            if (!$item->isAccumulatedUpToAge($ageMonths)) {
                 $invalidItems[] = $item->id;
             }
         }
