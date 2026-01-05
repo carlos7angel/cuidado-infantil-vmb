@@ -25,6 +25,7 @@ final class ListActiveChildrenByChildcareCenterTask extends ParentTask
                                 ]
                             )
                             ->with('child')
+                            ->with('room')
                             ->get();
 
         // Load relationships after getting the collection

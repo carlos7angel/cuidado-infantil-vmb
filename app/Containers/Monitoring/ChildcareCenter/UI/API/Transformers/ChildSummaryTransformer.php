@@ -46,6 +46,7 @@ final class ChildSummaryTransformer extends ParentTransformer
                     'enrollment_date' => $childEnrollment->enrollment_date,
                     'childcare_center_id' => Hashids::encode($childEnrollment->childcare_center_id),
                     'room_id' => Hashids::encode($childEnrollment->room_id ?? null),
+                    'room_name' => $childEnrollment->room?->name,
                     'status' => $childEnrollment->status,
                 ]
             ],
