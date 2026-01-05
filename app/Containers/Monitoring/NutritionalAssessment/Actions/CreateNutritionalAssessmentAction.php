@@ -42,7 +42,7 @@ final class CreateNutritionalAssessmentAction extends ParentAction
             ? \Carbon\Carbon::parse($request->input('assessment_date'))
             : now();
         
-        $ageInMonths = $child->birth_date->diffInMonths($assessmentDate);
+        $ageInMonths = $child->getAgeInMonthsAt($assessmentDate);
 
         // Preparar los datos para la valoración
         $data = $request->sanitize([

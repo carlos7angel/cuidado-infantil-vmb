@@ -74,11 +74,11 @@ final class Child extends ParentModel
      */
     public function getAgeReadableAttribute(): string
     {
-        if (!$this->birth_date) {
+        $ageInMonths = $this->getAgeInMonthsAt(now());
+        
+        if ($ageInMonths === null) {
             return '-';
         }
-
-        $ageInMonths = (int) ceil($this->birth_date->diffInMonths(now()));
         
         return self::formatAgeFromMonths($ageInMonths);
     }
@@ -198,11 +198,29 @@ final class Child extends ParentModel
     // ==========================================================================
 
     /**
-     * Get the child's age in months.
+     * Get the child's age in months (calculated to now).
      */
     public function getAgeInMonthsAttribute(): ?int
     {
-        return $this->birth_date ? (int) ceil($this->birth_date->diffInMonths(now())) : null;
+        return $this->getAgeInMonthsAt(now());
+    }
+
+    /**
+     * Calculate the child's age in months at a specific date.
+     * This is the single source of truth for age calculation in the application.
+     *
+     * @param \Carbon\Carbon|\DateTime|string|null $date The date to calculate age at. If null, uses now().
+     * @return int|null Age in months, or null if birth_date is not set
+     */
+    public function getAgeInMonthsAt($date = null): ?int
+    {
+        if (!$this->birth_date) {
+            return null;
+        }
+
+        $targetDate = $date ? \Carbon\Carbon::parse($date) : now();
+        
+        return (int) ceil($this->birth_date->diffInMonths($targetDate));
     }
 
     /**

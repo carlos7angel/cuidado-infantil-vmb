@@ -40,7 +40,7 @@ final class CreateChildVaccinationTask extends ParentTask
 
         // Calcular la edad del niño al momento de la aplicación
         $dateApplied = \Carbon\Carbon::parse($data['date_applied']);
-        $ageInMonths = $child->birth_date->diffInMonths($dateApplied);
+        $ageInMonths = $child->getAgeInMonthsAt($dateApplied);
 
         // Validar que la edad del niño esté dentro del rango válido de la dosis
         if (!$vaccineDose->isWithinValidAge($ageInMonths) && false) {

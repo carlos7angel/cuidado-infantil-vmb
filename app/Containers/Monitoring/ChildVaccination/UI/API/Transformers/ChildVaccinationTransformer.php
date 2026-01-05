@@ -21,7 +21,7 @@ final class ChildVaccinationTransformer extends ParentTransformer
         $child = $childVaccination->child;
 
         // Calcular edad del niño al momento de la aplicación
-        $ageAtApplication = $child->birth_date->diffInMonths($childVaccination->date_applied);
+        $ageAtApplication = $child->getAgeInMonthsAt($childVaccination->date_applied);
 
         return [
             'type' => $childVaccination->getResourceKey(),

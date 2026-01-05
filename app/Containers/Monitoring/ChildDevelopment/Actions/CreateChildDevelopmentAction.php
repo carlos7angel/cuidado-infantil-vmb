@@ -42,10 +42,16 @@ final class CreateChildDevelopmentAction extends ParentAction
             ? \Carbon\Carbon::parse($request->input('evaluation_date'))
             : now();
         
-        // Si se proporciona age_months, usarlo; si no, calcularlo
+        // Si se proporciona age_months, usarlo; si no, calcularlo usando el método del modelo
         $ageMonths = $request->input('age_months');
         if ($ageMonths === null) {
-            $ageMonths = $child->birth_date->diffInMonths($evaluationDate);
+            $ageMonths = $child->getAgeInMonthsAt($evaluationDate);
+            
+            if ($ageMonths === null) {
+                throw ValidationException::withMessages([
+                    'child_id' => ['El niño debe tener una fecha de nacimiento definida para calcular la edad.'],
+                ]);
+            }
         }
 
         // Obtener items logrados (solo IDs, todos se consideran achieved=true)
@@ -89,7 +95,7 @@ final class CreateChildDevelopmentAction extends ParentAction
         foreach ($developmentItems as $item) {
             // Un ítem es válido si su edad máxima es menor o igual a la edad del niño
             // Esto significa que el ítem debería haberse alcanzado hasta esa edad
-            if ($item->age_max_months > $ageMonths) {
+            if ($item->age_max_months <= $ageMonths) {
                 $invalidItems[] = $item->id;
             }
         }
