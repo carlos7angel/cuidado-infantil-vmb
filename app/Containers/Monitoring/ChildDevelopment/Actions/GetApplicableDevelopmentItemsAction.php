@@ -40,7 +40,7 @@ final class GetApplicableDevelopmentItemsAction extends ParentAction
             ? \Carbon\Carbon::parse($request->input('evaluation_date'))
             : now();
         
-        $ageMonths = $child->birth_date->diffInMonths($evaluationDate);
+        $ageMonths = $child->age_in_months;
 
         return $this->getApplicableDevelopmentItemsTask->run($ageMonths, $child);
     }

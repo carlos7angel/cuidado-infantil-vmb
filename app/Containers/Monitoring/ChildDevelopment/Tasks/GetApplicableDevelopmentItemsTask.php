@@ -13,7 +13,9 @@ final class GetApplicableDevelopmentItemsTask extends ParentTask
     {
         // Obtener TODOS los items acumulados hasta la edad del niño
         // Esto incluye todos los ítems que el niño debería haber alcanzado hasta su edad actual
-        $items = DevelopmentItem::where('age_max_months', '<=', $ageMonths)
+
+
+        $items = DevelopmentItem::where('age_min_months', '<=', $ageMonths)
             ->orderBy('area')
             ->orderBy('item_number')
             ->get();
@@ -50,30 +52,11 @@ final class GetApplicableDevelopmentItemsTask extends ParentTask
             ],
             'evaluation_info' => [
                 'age_months' => $ageMonths,
-                'age_readable' => $this->formatAge($ageMonths),
+                'age_readable' => Child::formatAgeFromMonths($ageMonths),
             ],
             'items_by_area' => $formattedItems,
             'total_items' => $items->count(),
         ];
-    }
-
-    /**
-     * Format age as human-readable string.
-     */
-    private function formatAge(int $months): string
-    {
-        if ($months < 12) {
-            return "{$months} " . ($months === 1 ? 'mes' : 'meses');
-        }
-
-        $years = intdiv($months, 12);
-        $remainingMonths = $months % 12;
-
-        if ($remainingMonths === 0) {
-            return "{$years} " . ($years === 1 ? 'año' : 'años');
-        }
-
-        return "{$years}a {$remainingMonths}m";
     }
 }
 

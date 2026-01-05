@@ -70,6 +70,7 @@ final class Child extends ParentModel
 
     /**
      * Get age as human-readable string (years and months).
+     * Uses the static formatAgeFromMonths method to ensure consistency.
      */
     public function getAgeReadableAttribute(): string
     {
@@ -79,18 +80,7 @@ final class Child extends ParentModel
 
         $ageInMonths = (int) ceil($this->birth_date->diffInMonths(now()));
         
-        if ($ageInMonths < 12) {
-            return "{$ageInMonths} " . ($ageInMonths === 1 ? 'mes' : 'meses');
-        }
-
-        $years = intdiv($ageInMonths, 12);
-        $remainingMonths = $ageInMonths % 12;
-
-        if ($remainingMonths === 0) {
-            return "{$years} " . ($years === 1 ? 'año' : 'años');
-        }
-
-        return "{$years} " . ($years === 1 ? 'año' : 'años') . " y {$remainingMonths} " . ($remainingMonths === 1 ? 'mes' : 'meses');
+        return self::formatAgeFromMonths($ageInMonths);
     }
 
     /**
@@ -213,6 +203,30 @@ final class Child extends ParentModel
     public function getAgeInMonthsAttribute(): ?int
     {
         return $this->birth_date ? (int) ceil($this->birth_date->diffInMonths(now())) : null;
+    }
+
+    /**
+     * Format age in months as human-readable string.
+     * This is a static method that can be used anywhere in the application
+     * to format age from months, ensuring consistency across the codebase.
+     *
+     * @param int $months Age in months
+     * @return string Formatted age string (e.g., "2 años y 3 meses", "5 meses", "1 año")
+     */
+    public static function formatAgeFromMonths(int $months): string
+    {
+        if ($months < 12) {
+            return "{$months} " . ($months === 1 ? 'mes' : 'meses');
+        }
+
+        $years = intdiv($months, 12);
+        $remainingMonths = $months % 12;
+
+        if ($remainingMonths === 0) {
+            return "{$years} " . ($years === 1 ? 'año' : 'años');
+        }
+
+        return "{$years} " . ($years === 1 ? 'año' : 'años') . " y {$remainingMonths} " . ($remainingMonths === 1 ? 'mes' : 'meses');
     }
 
     /**
