@@ -68,7 +68,7 @@ final class DevelopmentItem extends ParentModel
      */
     public function scopeAccumulatedUpToAge($query, int $ageMonths)
     {
-        return $query->where('age_max_months', '<=', $ageMonths);
+        return $query->where('age_min_months', '<=', $ageMonths);
     }
 
     /**

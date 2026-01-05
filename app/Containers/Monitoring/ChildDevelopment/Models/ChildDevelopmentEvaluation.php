@@ -112,7 +112,7 @@ final class ChildDevelopmentEvaluation extends ParentModel
         return $this->evaluationItems()
             ->whereHas('developmentItem', function ($query) use ($area) {
                 $query->where('area', $area->value)
-                    ->where('age_max_months', '<=', $this->age_months);
+                    ->where('age_min_months', '<=', $this->age_months);
             })
             ->where('achieved', true)
             ->count();
@@ -271,7 +271,7 @@ final class ChildDevelopmentEvaluation extends ParentModel
      */
     public function getApplicableItems(): \Illuminate\Database\Eloquent\Collection
     {
-        return DevelopmentItem::where('age_max_months', '<=', $this->age_months)
+        return DevelopmentItem::where('age_min_months', '<=', $this->age_months)
             ->orderBy('area')
             ->orderBy('item_number')
             ->get();
