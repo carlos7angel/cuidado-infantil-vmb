@@ -210,17 +210,19 @@ final class Child extends ParentModel
      * This is the single source of truth for age calculation in the application.
      *
      * @param \Carbon\Carbon|\DateTime|string|null $date The date to calculate age at. If null, uses now().
+     * @param bool $roundUp If true, rounds up to the next month (default). If false, rounds down to the current month.
      * @return int|null Age in months, or null if birth_date is not set
      */
-    public function getAgeInMonthsAt($date = null): ?int
+    public function getAgeInMonthsAt($date = null, bool $roundUp = true): ?int
     {
         if (!$this->birth_date) {
             return null;
         }
 
         $targetDate = $date ? \Carbon\Carbon::parse($date) : now();
+        $months = $this->birth_date->diffInMonths($targetDate);
         
-        return (int) ceil($this->birth_date->diffInMonths($targetDate));
+        return $roundUp ? (int) ceil($months) : (int) floor($months);
     }
 
     /**

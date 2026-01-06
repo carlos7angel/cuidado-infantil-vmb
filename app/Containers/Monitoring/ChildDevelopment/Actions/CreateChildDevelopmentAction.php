@@ -45,7 +45,7 @@ final class CreateChildDevelopmentAction extends ParentAction
         // Si se proporciona age_months, usarlo; si no, calcularlo usando el método del modelo
         $ageMonths = $request->input('age_months');
         if ($ageMonths === null) {
-            $ageMonths = $child->getAgeInMonthsAt($evaluationDate);
+            $ageMonths = $child->getAgeInMonthsAt($evaluationDate, roundUp: false);
             
             if ($ageMonths === null) {
                 throw ValidationException::withMessages([
