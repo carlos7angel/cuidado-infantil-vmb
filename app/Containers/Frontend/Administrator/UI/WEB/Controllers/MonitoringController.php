@@ -9,6 +9,7 @@ use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\ListDevelop
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\ListNutritionAssessmentsByChildRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\ListVaccinationTrackingByChildRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\SummarizeByChildRequest;
+use App\Containers\Monitoring\Child\Actions\GenerateChildSummaryReportAction;
 use App\Containers\Monitoring\Child\Tasks\FindChildByIdTask;
 use App\Containers\Monitoring\ChildDevelopment\Tasks\FindChildDevelopmentByIdTask;
 use App\Containers\Monitoring\ChildDevelopment\Tasks\ListChildDevelopmentEvaluationsTask;
@@ -419,6 +420,14 @@ final class MonitoringController extends WebController
             'areaScores',
             'attendanceStats'
         ));
+    }
+
+    public function generateChildSummaryReport(SummarizeByChildRequest $request)
+    {
+        $childId = $request->route('child_id');
+        $child = app(FindChildByIdTask::class)->run($childId);
+        
+        return app(GenerateChildSummaryReportAction::class)->run($child);
     }
 
 }

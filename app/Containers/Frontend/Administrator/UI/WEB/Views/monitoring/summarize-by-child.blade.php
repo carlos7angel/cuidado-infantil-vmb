@@ -30,6 +30,14 @@
         </h1>
     </div>
     <div class="d-flex gap-4 gap-lg-13">
+        <a href="{{ route('admin.monitoring.summarize-by-child.export-excel', ['child_id' => $child->id]) }}" 
+           class="btn btn-primary" 
+           id="btn-export-excel"
+           onclick="showExportLoader(this)">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="export-spinner"></span>
+            <i class="ki-outline ki-file-down fs-2" id="export-icon"></i> 
+            <span id="export-text">Generar Reporte Excel</span>
+        </a>
         <a href="{{ route('admin.child.manage') }}" class="btn btn-light">
             <i class="ki-outline ki-arrow-left fs-2"></i> Volver
         </a>
@@ -436,4 +444,30 @@
 
 @section('scripts')
     <script src="{{ asset('themes/admin/js/custom/monitoring/summarize-by-child.js') }}"></script>
+    <script>
+        function showExportLoader(button) {
+            const spinner = document.getElementById('export-spinner');
+            const icon = document.getElementById('export-icon');
+            const text = document.getElementById('export-text');
+            
+            // Mostrar spinner y ocultar icono
+            if (spinner && icon && text) {
+                spinner.classList.remove('d-none');
+                icon.classList.add('d-none');
+                text.textContent = 'Generando...';
+                button.disabled = true;
+                
+                // El loader se ocultará cuando se descargue el archivo
+                // Si hay un error, se puede resetear después de un tiempo
+                setTimeout(function() {
+                    if (button.disabled) {
+                        spinner.classList.add('d-none');
+                        icon.classList.remove('d-none');
+                        text.textContent = 'Generar Reporte Excel';
+                        button.disabled = false;
+                    }
+                }, 30000); // Resetear después de 30 segundos si no se descargó
+            }
+        }
+    </script>
 @endsection
