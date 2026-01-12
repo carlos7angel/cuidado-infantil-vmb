@@ -34,7 +34,7 @@
 
                 <div class="d-flex justify-content-center align-items-center mb-0 mb-lg-12">
                     <a class="mx-3">
-                        <img alt="Logo" src="{{ asset('themes/common/media/logos/logo.png') }}" class="h-80px h-lg-100px" />
+                        <img alt="Logo" src="{{ asset('themes/common/media/logos/logo_cuidado_activo.png') }}" class="h-80px h-lg-100px" />
                     </a>
                 </div>
 
