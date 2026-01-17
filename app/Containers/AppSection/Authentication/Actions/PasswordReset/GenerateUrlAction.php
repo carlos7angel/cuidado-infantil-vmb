@@ -11,11 +11,15 @@ final class GenerateUrlAction extends ParentAction
 {
     public function __invoke(User $notifiable, string $token): string
     {
-        $verificationUrl = action(ResetPasswordController::class, [
+        // Generate URL for the web reset password form, not the API
+        $resetPasswordUrl = AppFactory::current()->resetPasswordUrl();
+
+        // Add token and email as direct parameters
+        $params = http_build_query([
             'token' => $token,
             'email' => $notifiable->getEmailForPasswordReset(),
         ]);
 
-        return AppFactory::current()->resetPasswordUrl() . '?reset_url=' . $verificationUrl;
+        return $resetPasswordUrl . '?' . $params;
     }
 }

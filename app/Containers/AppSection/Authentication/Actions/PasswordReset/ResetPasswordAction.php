@@ -13,12 +13,12 @@ use Illuminate\Validation\ValidationException;
 final class ResetPasswordAction extends ParentAction
 {
     public function run(ResetPasswordRequest $request): string
-    {
+    {        
         $sanitizedData = $request->sanitize([
             'token',
             'email',
             'password',
-            'password_confirmation',
+            'confirm_password',
         ]);
 
         $status = Password::reset(

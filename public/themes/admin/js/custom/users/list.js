@@ -255,6 +255,12 @@ var KTUsersList = function () {
             $('#kt_form_new_user')[0].reset();
         });
 
+        // Handle cancel button
+        $('#kt_button_new_user_cancel').on('click', function (e) {
+            e.preventDefault();
+            $('#kt_modal_new_user').modal('hide');
+        });
+
         // Handle form submission
         $('#kt_form_new_user').on('submit', function (e) {
             e.preventDefault();

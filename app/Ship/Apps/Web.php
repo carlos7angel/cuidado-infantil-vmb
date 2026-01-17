@@ -16,6 +16,6 @@ final readonly class Web implements App
 
     public function resetPasswordUrl(): string
     {
-        return $this->url() . '/reset-password';
+        return $this->url() . '/' . config('app.admin_prefix') . '/restablecer-contrasena';
     }
 }
