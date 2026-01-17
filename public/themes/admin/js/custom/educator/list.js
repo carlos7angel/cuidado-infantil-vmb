@@ -179,6 +179,41 @@ var KTEducatorsList = function () {
 
             datatable.table().draw();
         });
+
+        // Handle report button loader
+        $('#kt_educator_report_btn').on('click', function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var reportUrl = button.data('url');
+
+            if (!reportUrl) {
+                console.error('Report URL not found');
+                return;
+            }
+
+            // Disable button immediately
+            button.prop('disabled', true);
+
+            // Add loading class to show visual feedback
+            button.addClass('loading');
+
+            // Change button text to show loading
+            var originalHtml = button.html();
+            button.html('<span class="spinner-border spinner-border-sm me-2" role="status"></span>Generando...');
+
+            // Navigate to report URL after a brief delay
+            setTimeout(function() {
+                window.location.href = reportUrl;
+            }, 800);
+
+            // Fallback: re-enable button after 10 seconds if something goes wrong
+            setTimeout(function() {
+                button.prop('disabled', false);
+                button.removeClass('loading');
+                button.html(originalHtml);
+            }, 10000);
+        });
     }
 
     return {

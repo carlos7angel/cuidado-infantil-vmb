@@ -7,6 +7,7 @@ use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\GetEducatorsJ
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\StoreEducatorRequest;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
 use App\Containers\Monitoring\Educator\Actions\CreateEducatorWebAction;
+use App\Containers\Monitoring\Educator\Actions\GenerateEducatorsReportAction;
 use App\Containers\Monitoring\Educator\Actions\GetEducatorsJsonDataTableAction;
 use App\Containers\Monitoring\Educator\Actions\UpdateEducatorWebAction;
 use App\Containers\Monitoring\Educator\Models\Educator;
@@ -82,6 +83,15 @@ final class EducatorController extends WebController
                 'success' => false,
                 'message' => $e->getMessage()
             ], 422);
+        }
+    }
+
+    public function generateEducatorsReport()
+    {
+        try {
+            return app(GenerateEducatorsReportAction::class)->run();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el reporte: ' . $e->getMessage());
         }
     }
 }

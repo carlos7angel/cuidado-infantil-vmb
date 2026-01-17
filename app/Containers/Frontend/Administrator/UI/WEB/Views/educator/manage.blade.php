@@ -74,7 +74,13 @@
                 </h3>
             </div>
             <div class="d-flex flex-wrap my-1">
-                <a href="{{ route('admin.educator.form_create') }}" class="btn btn-primary"><i class="ki-outline ki-file-added fs-3 me-1"></i>Nuevo Registro</a>
+                <button type="button" id="kt_educator_report_btn" class="btn btn-success me-3" data-url="{{ route('admin.educator.report.excel') }}">
+                    <i class="ki-outline ki-file-down fs-3 me-2"></i>
+                    Generar Reporte
+                </button>
+                <a href="{{ route('admin.educator.form_create') }}" class="btn btn-primary">
+                    <i class="ki-outline ki-add-files fs-3 me-1"></i>Nuevo Registro
+                </a>
             </div>
         </div>
 
