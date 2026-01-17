@@ -26,6 +26,8 @@ final class Educator extends ParentModel
         'state',
         'dni',
         'phone',
+        'contract_start_date',
+        'contract_end_date',
     ];
 
     /**
@@ -35,6 +37,8 @@ final class Educator extends ParentModel
      */
     protected $casts = [
         'birth' => 'date',
+        'contract_start_date' => 'date',
+        'contract_end_date' => 'date',
         'gender' => Gender::class,
     ];
 
@@ -49,6 +53,64 @@ final class Educator extends ParentModel
     {
         return Attribute::make(
             get: fn (): string => "{$this->first_name} {$this->last_name}",
+        );
+    }
+
+    // ==========================================================================
+    // Mutators
+    // ==========================================================================
+
+    /**
+     * Set the contract start date.
+     * Converts from d/m/Y format to Y-m-d format for database storage.
+     */
+    protected function contractStartDate(): Attribute
+    {
+        return Attribute::make(
+            set: function (string|null $value): string|null {
+                if (empty($value)) {
+                    return null;
+                }
+
+                try {
+                    $date = \DateTime::createFromFormat('d/m/Y', $value);
+                    if ($date) {
+                        return $date->format('Y-m-d');
+                    }
+                } catch (\Exception $e) {
+                    // Fallback to strtotime if DateTime fails
+                    return date('Y-m-d', strtotime($value));
+                }
+
+                return $value;
+            }
+        );
+    }
+
+    /**
+     * Set the contract end date.
+     * Converts from d/m/Y format to Y-m-d format for database storage.
+     */
+    protected function contractEndDate(): Attribute
+    {
+        return Attribute::make(
+            set: function (string|null $value): string|null {
+                if (empty($value)) {
+                    return null;
+                }
+
+                try {
+                    $date = \DateTime::createFromFormat('d/m/Y', $value);
+                    if ($date) {
+                        return $date->format('Y-m-d');
+                    }
+                } catch (\Exception $e) {
+                    // Fallback to strtotime if DateTime fails
+                    return date('Y-m-d', strtotime($value));
+                }
+
+                return $value;
+            }
         );
     }
 

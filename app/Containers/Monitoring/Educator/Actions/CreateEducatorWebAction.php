@@ -32,6 +32,8 @@ final class CreateEducatorWebAction extends ParentAction
             'state',
             'dni',
             'phone',
+            'contract_start_date',
+            'contract_end_date',
             'childcare_center_ids',
         ]);
     }

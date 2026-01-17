@@ -156,6 +156,36 @@
                 <div class="card card-flush py-4">
                     <div class="card-header">
                         <div class="card-title">
+                            <h2>Información de Contrato</h2>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="mb-10 row g-9">
+                            <div class="col-md-6 fv-row">
+                                <label class="form-label">Fecha Inicio de Contrato</label>
+                                <input class="form-control datepicker_flatpickr" name="contract_start_date"
+                                       placeholder="Seleccione una fecha"
+                                       value="{{ old('contract_start_date', $educator->contract_start_date ? $educator->contract_start_date->format('d/m/Y') : '') }}" />
+                                @error('contract_start_date')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 fv-row">
+                                <label class="form-label">Fecha Fin de Contrato</label>
+                                <input class="form-control datepicker_flatpickr" name="contract_end_date"
+                                       placeholder="Seleccione una fecha"
+                                       value="{{ old('contract_end_date', $educator->contract_end_date ? $educator->contract_end_date->format('d/m/Y') : '') }}" />
+                                @error('contract_end_date')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-flush py-4">
+                    <div class="card-header">
+                        <div class="card-title">
                             <h2>Centros de Cuidado Infantil</h2>
                         </div>
                     </div>

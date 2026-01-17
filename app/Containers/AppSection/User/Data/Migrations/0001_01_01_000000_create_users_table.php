@@ -17,8 +17,7 @@ return new class extends Migration {
             $table->integer('login_attempt')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->boolean('active')->default(true);
-            $table->foreignId('childcare_center_id')->nullable()
-                    ->constrained('childcare_centers')->nullOnDelete();
+            $table->foreignId('childcare_center_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

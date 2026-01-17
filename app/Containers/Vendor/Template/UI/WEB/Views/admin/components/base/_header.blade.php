@@ -13,7 +13,7 @@
         </div>
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
             <a>
-                <span class="text-decoration-underline text-primary fs-1" style="font-weight: 800">EDUCARE</span>
+                <span class="text-decoration-underline text-primary fs-1" style="font-weight: 800">CUIDADO ACTIVO</span>
             </a>
         </div>
         <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">

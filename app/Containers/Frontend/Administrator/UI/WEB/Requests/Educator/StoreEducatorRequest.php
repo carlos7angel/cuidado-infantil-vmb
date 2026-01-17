@@ -25,6 +25,8 @@ final class StoreEducatorRequest extends ParentRequest
             'state' => 'nullable|string|max:255',
             'dni' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
+            'contract_start_date' => 'nullable|date_format:d/m/Y',
+            'contract_end_date' => 'nullable|date_format:d/m/Y',
             'childcare_center_ids' => 'required|array|min:1',
             'childcare_center_ids.*' => 'required|exists:childcare_centers,id',
         ];
