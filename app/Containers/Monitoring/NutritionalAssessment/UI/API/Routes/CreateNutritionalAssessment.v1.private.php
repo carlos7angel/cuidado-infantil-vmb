@@ -21,6 +21,7 @@
  * @apiParam           {String} [assessment_date] Fecha de la valoración (formato: Y-m-d). Por defecto: fecha actual
  * @apiParam           {String} [observations] Observaciones (opcional)
  * @apiParam           {String} [recommendations] Recomendaciones (opcional)
+ * @apiParam           {String} [actions_taken] Acciones tomadas en referencia a la evaluación anterior (opcional)
  *
  * @apiSuccessExample  {json} Success-Response:
  * HTTP/1.1 201 Created
@@ -40,6 +41,9 @@
  *         "status_height_age": "normal",
  *         "status_weight_height": "normal",
  *         "status_bmi_age": "normal",
+ *         "observations": "Niño activo y con buen apetito",
+ *         "recommendations": "Reforzar consumo de frutas y verduras",
+ *         "actions_taken": "Se ajustó el plan alimentario aumentando la frecuencia de meriendas",
  *         "bmi": 17.08,
  *         "created_at": "2025-12-26T10:00:00.000000Z"
  *     }
@@ -51,4 +55,3 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('children/{child_id}/nutritional-assessments', CreateNutritionalAssessmentController::class)
     ->middleware(['auth:api']);
-

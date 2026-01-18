@@ -270,7 +270,7 @@
                 @endforeach
             </div>
 
-            @if($item->observations || $item->recommendations)
+            @if($item->observations || $item->recommendations || $item->actions_taken)
             <div class="separator separator-dashed border-muted my-10"></div>
 
             <h6 class="mb-5 mt-10 fw-bolder text-primary">Observaciones y recomendaciones</h6>
@@ -289,6 +289,15 @@
                 <div class="col-md-12">
                     <label class="fw-semibold fs-7 text-gray-600 mb-2">Recomendaciones:</label>
                     <div class="form-control form-control-plaintext" style="min-height: 80px;">{{ $item->recommendations }}</div>
+                </div>
+            </div>
+            @endif
+
+            @if($item->actions_taken)
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <label class="fw-semibold fs-7 text-gray-600 mb-2">Acciones tomadas:</label>
+                    <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $item->actions_taken }}</div>
                 </div>
             </div>
             @endif

@@ -37,6 +37,7 @@ final class NutritionalAssessment extends ParentModel
         // Observaciones
         'observations',
         'recommendations',
+        'actions_taken',
         'next_assessment_date',
     ];
 

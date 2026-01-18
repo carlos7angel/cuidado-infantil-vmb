@@ -56,6 +56,7 @@ final class CreateNutritionalAssessmentAction extends ParentAction
             'arm_circumference' => $request->input('arm_circumference'),
             'observations' => $request->input('observations'),
             'recommendations' => $request->input('recommendations'),
+            'actions_taken' => $request->input('actions_taken'),
         ]);
 
         return $this->createNutritionalAssessmentTask->run($data);

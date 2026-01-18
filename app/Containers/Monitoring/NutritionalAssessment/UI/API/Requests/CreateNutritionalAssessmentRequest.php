@@ -20,6 +20,7 @@ final class CreateNutritionalAssessmentRequest extends ParentRequest
             'assessment_date' => 'nullable|date|before_or_equal:today',
             'observations' => 'nullable|string|max:1000',
             'recommendations' => 'nullable|string|max:1000',
+            'actions_taken' => 'nullable|string|max:2000',
         ];
     }
 

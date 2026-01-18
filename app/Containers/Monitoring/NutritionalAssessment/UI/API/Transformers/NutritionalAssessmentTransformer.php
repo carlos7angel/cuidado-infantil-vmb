@@ -57,6 +57,7 @@ final class NutritionalAssessmentTransformer extends ParentTransformer
             // Observaciones
             'observations' => $nutritionalAssessment->observations,
             'recommendations' => $nutritionalAssessment->recommendations,
+            'actions_taken' => $nutritionalAssessment->actions_taken,
             'next_assessment_date' => $nutritionalAssessment->next_assessment_date?->format('Y-m-d'),
             
             // Metadatos
