@@ -90,7 +90,15 @@ final class GetEducatorsJsonDataTableTask extends ParentTask
         
         // Apply sorting
         if ($sortColumn != null && $sortColumn != "" && $sortColumnDir != null && $sortColumnDir != "") {
-            $result = $result->pushCriteria(new OrderByFieldCriteria($sortColumn, $sortColumnDir));
+            if ($sortColumn === 'created_at') {
+                $orderByColumn = 'created_at';
+            } elseif (in_array($sortColumn, ['first_name', 'email', 'state'], true)) {
+                $orderByColumn = $sortColumn === 'email' ? 'email' : $sortColumn;
+            } else {
+                $orderByColumn = 'first_name';
+            }
+
+            $result = $result->pushCriteria(new OrderByFieldCriteria($orderByColumn, $sortColumnDir));
         } else {
             // Default sorting by created_at desc
             $result = $result->pushCriteria(new OrderByFieldCriteria('created_at', 'desc'));
@@ -106,13 +114,15 @@ final class GetEducatorsJsonDataTableTask extends ParentTask
         $transformedData = [];
         foreach ($data as $item) {
             $centers = $item->childcareCenters->pluck('name')->join(', ') ?: '-';
+            $user = $item->user;
+
             $transformedData[] = [
                 'id' => $item->id,
                 'full_name' => $item->first_name . ' ' . $item->last_name,
-                'email' => $item->user ? $item->user->email : '-',
+                'email' => $user ? $user->email : '-',
                 'state' => $item->state ?? '-',
                 'childcare_centers' => $centers,
-                'phone' => $item->phone ?? '-',
+                'status' => $user && $user->active ? 'Activo' : 'Inactivo',
                 'created_at' => $item->created_at ? $item->created_at->format('d/m/Y') : '-',
             ];
         }

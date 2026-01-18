@@ -95,7 +95,7 @@
                         <th class="text-center min-w-200px" name="email">Correo electrónico</th>
                         <th class="text-center min-w-150px" name="state">Departamento</th>
                         <th class="text-center min-w-250px">Centros de Cuidado Infantil</th>
-                        <th class="text-center min-w-120px">Teléfono</th>
+                        <th class="text-center min-w-120px">Estado</th>
                         <th class="text-center min-w-100px" name="created_at">Fecha de Registro</th>
                         <th class="text-end min-w-70px">Opciones</th>
                     </tr>

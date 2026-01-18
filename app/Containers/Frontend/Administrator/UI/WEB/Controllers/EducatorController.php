@@ -14,6 +14,7 @@ use App\Containers\Monitoring\Educator\Models\Educator;
 use App\Containers\Monitoring\Educator\Tasks\FindEducatorByIdTask;
 use App\Ship\Parents\Controllers\WebController;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 
 final class EducatorController extends WebController
 {
@@ -24,7 +25,7 @@ final class EducatorController extends WebController
         return view('frontend@administrator::educator.manage', compact('page_title'));
     }
 
-    public function listJsonDataTable(GetEducatorsJsonDataTableRequest $request)
+    public function listJsonDataTable(GetEducatorsJsonDataTableRequest $request): JsonResponse
     {
         try {
             $data = app(GetEducatorsJsonDataTableAction::class)->run($request);
@@ -92,6 +93,38 @@ final class EducatorController extends WebController
             return app(GenerateEducatorsReportAction::class)->run();
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el reporte: ' . $e->getMessage());
+        }
+    }
+
+    public function toggleStatus(int $id): JsonResponse
+    {
+        try {
+            $educator = Educator::with('user')->findOrFail($id);
+
+            if (!$educator->user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El educador no tiene una cuenta de usuario asociada.',
+                ], 422);
+            }
+
+            $user = $educator->user;
+            $user->active = !$user->active;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => $user->active
+                    ? 'La cuenta del educador ha sido activada correctamente.'
+                    : 'La cuenta del educador ha sido desactivada correctamente.',
+                'active' => $user->active,
+                'status_label' => $user->active ? 'Activo' : 'Inactivo',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 }

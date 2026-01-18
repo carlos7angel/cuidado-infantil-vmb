@@ -32,8 +32,6 @@ final readonly class AccessTokenProxy extends ParentValue
             'scope' => $this->scope->toString(),
         ];
 
-        // dd($vv);
-
         return $vv;
     }
 }
