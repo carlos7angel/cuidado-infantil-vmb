@@ -4,6 +4,7 @@ namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\GetChildrenJsonDataTableRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\ShowChildRequest;
+use App\Containers\Monitoring\Child\Actions\GenerateChildrenReportAction;
 use App\Containers\Monitoring\Child\Actions\GetChildrenJsonDataTableAction;
 use App\Containers\Monitoring\Child\Tasks\FindChildByIdTask;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
@@ -57,6 +58,15 @@ final class ChildController extends WebController
         ]);
 
         return view('frontend@administrator::child.show', compact('page_title', 'child'));
+    }
+
+    public function generateChildrenReport()
+    {
+        try {
+            return app(GenerateChildrenReportAction::class)->run();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el reporte: ' . $e->getMessage());
+        }
     }
 }
 

@@ -223,6 +223,33 @@ var KTChildrenList = function () {
 
             datatable.table().draw();
         });
+
+        $('#kt_children_report_btn').on('click', function (e) {
+
+            var button = this;
+
+            const spinner = button.querySelector('.spinner-border');
+            const icon = button.querySelector('i');
+            const text = button.querySelector('span.ms-2');
+
+            if (spinner && icon && text) {
+                spinner.classList.remove('d-none');
+                icon.classList.add('d-none');
+                text.textContent = 'Generando...';
+                button.disabled = true;
+
+                setTimeout(function () {
+                    if (button.disabled) {
+                        spinner.classList.add('d-none');
+                        icon.classList.remove('d-none');
+                        text.textContent = 'Generar Reporte';
+                        button.disabled = false;
+                       
+                    }
+                }, 5000);
+            }
+
+        });
     }
 
     return {

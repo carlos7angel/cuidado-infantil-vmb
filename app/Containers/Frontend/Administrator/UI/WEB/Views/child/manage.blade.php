@@ -97,6 +97,13 @@
                     <span class="text-gray-500 fs-6 ms-2"></span>
                 </h3>
             </div>
+            <div class="d-flex flex-wrap my-1">
+                <a href="{{ route('admin.child.report.excel') }}" class="btn btn-success" id="kt_children_report_btn">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <i class="ki-outline ki-file-down fs-3"></i>
+                    <span class="ms-2">Generar Reporte</span>
+                </a>
+            </div>
         </div>
 
         <div class="card card-flush">
