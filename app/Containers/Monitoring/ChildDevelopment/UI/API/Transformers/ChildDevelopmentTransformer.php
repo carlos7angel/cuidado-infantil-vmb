@@ -101,6 +101,7 @@ final class ChildDevelopmentTransformer extends ParentTransformer
             
             // Observaciones
             'notes' => $evaluation->notes,
+            'actions_taken' => $evaluation->actions_taken,
             'next_evaluation_date' => $evaluation->next_evaluation_date?->format('Y-m-d'),
             'next_evaluation_date_readable' => $evaluation->next_evaluation_date?->format('d/m/Y'),
             

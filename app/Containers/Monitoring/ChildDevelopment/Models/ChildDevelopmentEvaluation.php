@@ -23,6 +23,7 @@ final class ChildDevelopmentEvaluation extends ParentModel
         'weight',
         'height',
         'notes',
+        'actions_taken',
         'next_evaluation_date',
     ];
 

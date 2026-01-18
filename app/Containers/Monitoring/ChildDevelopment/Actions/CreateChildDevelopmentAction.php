@@ -70,6 +70,7 @@ final class CreateChildDevelopmentAction extends ParentAction
             'weight' => $request->input('weight'),
             'height' => $request->input('height'),
             'notes' => $request->input('notes'),
+            'actions_taken' => $request->input('actions_taken'),
             'next_evaluation_date' => $request->input('next_evaluation_date'),
             'items' => $achievedItemIds, // Solo IDs de items logrados
         ]);

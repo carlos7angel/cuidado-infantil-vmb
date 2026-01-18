@@ -25,6 +25,7 @@ final class CreateChildDevelopmentRequest extends ParentRequest
             'weight' => 'nullable|numeric|min:0.1|max:100',
             'height' => 'nullable|numeric|min:30|max:200',
             'notes' => 'nullable|string|max:2000',
+            'actions_taken' => 'nullable|string|max:2000',
             'next_evaluation_date' => 'nullable|date|after:today',
             
             // Items logrados (solo se envían los que fueron logrados)

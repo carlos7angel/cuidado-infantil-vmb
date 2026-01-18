@@ -58,6 +58,9 @@ final class ChildDevelopmentListTransformer extends ParentTransformer
             
             // Fecha próxima evaluación
             'next_evaluation_date' => $evaluation->next_evaluation_date?->format('Y-m-d'),
+
+            // Seguimiento
+            'actions_taken' => $evaluation->actions_taken,
             
             // Metadatos básicos
             'created_at' => $evaluation->created_at->format('Y-m-d H:i:s'),

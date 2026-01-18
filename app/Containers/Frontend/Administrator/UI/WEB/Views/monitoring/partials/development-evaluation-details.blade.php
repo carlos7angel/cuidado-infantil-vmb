@@ -243,17 +243,28 @@
                 @endforeach
             </div>
 
-            @if($item->notes)
+            @if($item->notes || $item->actions_taken)
             <div class="separator separator-dashed border-muted my-10"></div>
 
             <h6 class="mb-5 mt-10 fw-bolder text-primary">Notas</h6>
 
+            @if($item->notes)
             <div class="row mb-3">
                 <div class="col-md-12">
                     <label class="fw-semibold fs-7 text-gray-600 mb-2">Observaciones:</label>
                     <div class="form-control form-control-plaintext" style="min-height: 80px;">{{ $item->notes }}</div>
                 </div>
             </div>
+            @endif
+
+            @if($item->actions_taken)
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label class="fw-semibold fs-7 text-gray-600 mb-2">Acciones tomadas:</label>
+                    <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $item->actions_taken }}</div>
+                </div>
+            </div>
+            @endif
             @endif
 
             @if($item->next_evaluation_date)
