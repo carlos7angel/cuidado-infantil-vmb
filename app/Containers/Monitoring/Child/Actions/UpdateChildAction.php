@@ -11,6 +11,7 @@ use App\Containers\Monitoring\Child\Tasks\FindChildByIdTask;
 use App\Containers\Monitoring\Child\Tasks\UpdateChildMedicalRecordTask;
 use App\Containers\Monitoring\Child\Tasks\UpdateChildSocialRecordTask;
 use App\Containers\Monitoring\Child\Tasks\UpdateChildTask;
+use App\Containers\Monitoring\Child\Tasks\ProcessChildAvatarTask;
 use App\Containers\Monitoring\Child\UI\API\Requests\UpdateChildRequest;
 use App\Containers\Monitoring\ChildEnrollment\Enums\EnrollmentStatus;
 use App\Containers\Monitoring\ChildEnrollment\Models\ChildEnrollment;
@@ -29,6 +30,7 @@ final class UpdateChildAction extends ParentAction
         private readonly CreateChildFamilyMemberTask $createChildFamilyMemberTask,
         private readonly UpdateChildEnrollmentTask $updateChildEnrollmentTask,
         private readonly CreateFileTask $createFileTask,
+        private readonly ProcessChildAvatarTask $processChildAvatarTask,
     ) {
     }
 
@@ -103,6 +105,8 @@ final class UpdateChildAction extends ParentAction
             if (!empty($generalData)) {
                 $child = $this->updateChildTask->run($generalData, $request->id);
             }
+
+            $this->handleAvatarUpload($request, $child);
 
             // 2. Update medical record (solo campos que vienen en el request)
             $medicalRecordData = array_filter([
@@ -287,6 +291,36 @@ final class UpdateChildAction extends ParentAction
             $enrollment->save();
             // Recargar el enrollment para asegurar que los cambios se reflejen
             $enrollment->refresh();
+        }
+    }
+
+    private function handleAvatarUpload(UpdateChildRequest $request, Child $child): void
+    {
+        $file = $request->file('avatar');
+
+        if (!$file && $request->has('avatar')) {
+            $value = $request->input('avatar');
+            if (is_array($value)) {
+                $file = $value[0] ?? null;
+            }
+        }
+
+        if (!$file && $request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+        }
+
+        if (is_array($file)) {
+            $file = $file[0] ?? null;
+        }
+
+        if ($file && $file->isValid()) {
+            try {
+                $path = $this->processChildAvatarTask->run($file, $child->avatar);
+                $child->avatar = $path;
+                $child->save();
+            } catch (\Exception $e) {
+                Log::error('Error processing child avatar: ' . $e->getMessage());
+            }
         }
     }
 }

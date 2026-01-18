@@ -13,7 +13,6 @@ final class CreateChildController extends ApiController
 {
     public function __invoke(CreateChildRequest $request, CreateChildAction $action): JsonResponse
     {
-        // dd($request->all());
         $child = $action->run($request);
 
         return Response::create($child, ChildTransformer::class)->created();

@@ -40,6 +40,9 @@ final class UpdateChildRequest extends ParentRequest
             'city' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
 
+            'avatar' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+            'avatar.*' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+
             // Medical information (opcional)
             'has_insurance' => 'nullable|boolean',
             'insurance_details' => 'string|max:500|nullable',
@@ -222,6 +225,12 @@ final class UpdateChildRequest extends ParentRequest
             'file_pickup_authorization.*.file' => 'La autorización de recojo debe ser un archivo válido.',
             'file_pickup_authorization.*.mimes' => 'La autorización de recojo debe ser un PDF.',
             'file_pickup_authorization.*.max' => 'La autorización de recojo no puede ser mayor a 5MB.',
+            'avatar.file' => 'La imagen de perfil debe ser un archivo válido.',
+            'avatar.mimes' => 'La imagen de perfil debe ser un archivo de tipo JPEG, JPG, PNG o GIF.',
+            'avatar.max' => 'La imagen de perfil no puede ser mayor a 5MB.',
+            'avatar.*.file' => 'La imagen de perfil debe ser un archivo válido.',
+            'avatar.*.mimes' => 'La imagen de perfil debe ser un archivo de tipo JPEG, JPG, PNG o GIF.',
+            'avatar.*.max' => 'La imagen de perfil no puede ser mayor a 5MB.',
         ];
     }
 }

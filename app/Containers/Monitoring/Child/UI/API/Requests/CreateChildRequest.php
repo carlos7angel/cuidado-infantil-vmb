@@ -36,6 +36,8 @@ final class CreateChildRequest extends ParentRequest
             'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'avatar' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+            'avatar.*' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
 
             'has_insurance' => 'required|boolean',
             'insurance_details' => 'string|max:500|nullable',
@@ -177,6 +179,13 @@ final class CreateChildRequest extends ParentRequest
             'family_members.*.marital_status.enum' => 'El estado civil del miembro de familia no es válido.',
             
             // Archivos (acepta tanto archivo simple como array)
+            'avatar.file' => 'La imagen de perfil debe ser un archivo válido.',
+            'avatar.mimes' => 'La imagen de perfil debe ser un archivo de tipo JPEG, JPG, PNG o GIF.',
+            'avatar.max' => 'La imagen de perfil no puede ser mayor a 5MB.',
+            'avatar.*.file' => 'La imagen de perfil debe ser un archivo válido.',
+            'avatar.*.mimes' => 'La imagen de perfil debe ser un archivo de tipo JPEG, JPG, PNG o GIF.',
+            'avatar.*.max' => 'La imagen de perfil no puede ser mayor a 5MB.',
+
             'file_admission_request.file' => 'El archivo de solicitud de admisión debe ser un archivo válido.',
             'file_admission_request.mimes' => 'El archivo de solicitud de admisión debe ser un PDF.',
             'file_admission_request.max' => 'El archivo de solicitud de admisión no puede ser mayor a 5MB.',

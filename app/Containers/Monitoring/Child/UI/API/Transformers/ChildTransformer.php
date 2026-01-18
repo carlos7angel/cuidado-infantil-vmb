@@ -23,12 +23,15 @@ final class ChildTransformer extends ParentTransformer
 
     public function transform(Child $child): array
     {
+        $avatarUrl = $child->avatar ? url($child->avatar) : null;
+
         return [
             'type' => $child->getResourceKey(),
             'id' => $child->getHashedKey(),
 
             // General information
             'general' => [
+                'hola' => 's',
                 'first_name' => $child->first_name,
                 'paternal_last_name' => $child->paternal_last_name,
                 'maternal_last_name' => $child->maternal_last_name,
@@ -36,7 +39,7 @@ final class ChildTransformer extends ParentTransformer
                 'gender' => $child->gender,
                 'birth_date' => $child->birth_date,
                 'age' => $child->age,
-                'avatar' => $child->avatar,
+                'avatar' => $avatarUrl,
                 'language' => $child->language,
                 'country' => $child->country,
                 'state' => $child->state,

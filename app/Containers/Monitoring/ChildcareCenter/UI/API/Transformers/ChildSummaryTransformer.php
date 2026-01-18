@@ -25,6 +25,8 @@ final class ChildSummaryTransformer extends ParentTransformer
         $child = $childEnrollment->child;
         // $room = $childEnrollment->room;
 
+        $avatarUrl = $child->avatar ? url($child->avatar) : null;
+
         return [
             'type' => $childEnrollment->getResourceKey(),
             'id' => $child->getHashedKey(),
@@ -34,6 +36,7 @@ final class ChildSummaryTransformer extends ParentTransformer
                 'maternal_last_name' => $child->maternal_last_name,
                 'full_name' => $child->full_name,
                 'birth_date' => $child->birth_date,
+                'avatar' => $avatarUrl,
                 'age' => $child->age,
                 'gender' => $child->gender,
                 'state' => $child->state,

@@ -17,6 +17,8 @@ final class ChildListTransformer extends ParentTransformer
 
     public function transform(Child $child): array
     {
+        $avatarUrl = $child->avatar ? url($child->avatar) : null;
+
         return [
             'type' => $child->getResourceKey(),
             'id' => $child->getHashedKey(),
@@ -29,7 +31,7 @@ final class ChildListTransformer extends ParentTransformer
             'gender' => $child->gender,
             'birth_date' => $child->birth_date,
             'age' => $child->age,
-            'avatar' => $child->avatar,
+            'avatar' => $avatarUrl,
 
             // Location info
             'city' => $child->city,

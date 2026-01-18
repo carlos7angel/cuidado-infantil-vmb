@@ -12,6 +12,7 @@ use App\Containers\Monitoring\Child\Tasks\CreateChildFamilyMemberTask;
 use App\Containers\Monitoring\Child\Tasks\CreateChildMedicalRecordTask;
 use App\Containers\Monitoring\Child\Tasks\CreateChildSocialRecordTask;
 use App\Containers\Monitoring\Child\Tasks\CreateChildTask;
+use App\Containers\Monitoring\Child\Tasks\ProcessChildAvatarTask;
 use App\Containers\Monitoring\ChildEnrollment\Enums\EnrollmentStatus;
 use App\Containers\Monitoring\ChildEnrollment\Tasks\CreateChildEnrollmentTask;
 use App\Containers\Monitoring\ChildEnrollment\Models\ChildEnrollment;
@@ -28,6 +29,7 @@ final class CreateChildAction extends ParentAction
         private readonly CreateChildFamilyMemberTask $createChildFamilyMemberTask,
         private readonly CreateChildEnrollmentTask $createChildEnrollmentTask,
         private readonly CreateFileTask $createFileTask,
+        private readonly ProcessChildAvatarTask $processChildAvatarTask,
     ) {
     }
 
@@ -107,6 +109,8 @@ final class CreateChildAction extends ParentAction
                 'language' => $data['language'] ?? null,
             ];
             $child = $this->createChildTask->run($generalData);
+
+            $this->handleAvatarUpload($request, $child);
 
             // 2. Create medical record
             $medicalRecordData = [
@@ -191,6 +195,32 @@ final class CreateChildAction extends ParentAction
 
             return $child->load(['medicalRecord', 'socialRecord.familyMembers', 'enrollments']);
         });
+    }
+
+    private function handleAvatarUpload(CreateChildRequest $request, Child $child): void
+    {
+        $file = $request->file('avatar');
+
+        if (!$file && $request->has('avatar')) {
+            $value = $request->input('avatar');
+            if (is_array($value)) {
+                $file = $value[0] ?? null;
+            }
+        }
+
+        if (!$file && $request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+        }
+
+        if (is_array($file)) {
+            $file = $file[0] ?? null;
+        }
+
+        if ($file && $file->isValid()) {
+            $path = $this->processChildAvatarTask->run($file, $child->avatar);
+            $child->avatar = $path;
+            $child->save();
+        }
     }
 
     /**
