@@ -208,13 +208,14 @@ var KTChildrenList = function () {
             e.preventDefault();
 
             $("input[name='dt_search_input']").val('');
+            datatable.search('', false, false);
 
             // Reset childcare center filter
             childcareCenterFilter.val('').trigger('change');
 
             $('.datatable-input').each(function () {
                 if ($(this).is('select')) {
-                    $(this).val('');
+                    $(this).val('').trigger('change');
                 } else {
                     $(this).val('');
                 }

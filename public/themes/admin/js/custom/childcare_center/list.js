@@ -156,12 +156,13 @@ var KTChildcareCentersList = function () {
         $('#kt_reset').on('click', function (e) {
             e.preventDefault();
 
-            $("input[name='dt_search_input']").val('')
+            $("input[name='dt_search_input']").val('');
+            datatable.search('', false, false);
 
             $('.datatable-input').each(function () {
                 // Reset both inputs and selects
                 if ($(this).is('select')) {
-                    $(this).val('');
+                    $(this).val('').trigger('change');
                 } else {
                     $(this).val('');
                 }
