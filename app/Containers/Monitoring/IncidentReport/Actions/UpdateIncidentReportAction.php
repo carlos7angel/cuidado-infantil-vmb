@@ -17,7 +17,11 @@ final class UpdateIncidentReportAction extends ParentAction
     public function run(UpdateIncidentReportRequest $request): IncidentReport
     {
         $data = $request->sanitize([
-            // add your request data here
+            'description',
+            'actions_taken',
+            'additional_comments',
+            'follow_up_notes',
+            'authority_notification_details',
         ]);
 
         return $this->updateIncidentReportTask->run($data, $request->id);

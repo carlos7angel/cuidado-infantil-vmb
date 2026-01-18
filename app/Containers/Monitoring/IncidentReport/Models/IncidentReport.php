@@ -124,7 +124,6 @@ final class IncidentReport extends ParentModel
         'related_incident_ids' => 'array',
         'status' => IncidentStatus::class,
         'type' => IncidentType::class,
-        'severity_level' => IncidentSeverity::class,
     ];
 
     // ==========================================================================
@@ -210,7 +209,7 @@ final class IncidentReport extends ParentModel
      */
     public function requiresImmediateAttention(): bool
     {
-        return $this->severity_level->requiresImmediateAttention()
+        return ($this->severity_level?->requiresImmediateAttention() ?? false)
             || $this->type->requiresImmediateAttention()
             || $this->status->requiresAttention();
     }
@@ -221,8 +220,30 @@ final class IncidentReport extends ParentModel
     public function requiresAuthorityNotification(): bool
     {
         return $this->requires_authority_notification
-            || $this->severity_level->requiresAuthorityNotification()
+            || ($this->severity_level?->requiresAuthorityNotification() ?? false)
             || $this->type->requiresAuthorityNotification();
+    }
+
+    /**
+     * Check if the incident needs attention (stuck for more than 60 days in pending states).
+     */
+    public function needsAttention(): bool
+    {
+        // Only check incidents in "Reportado" or "En Revisión" status
+        if (!$this->status || !in_array($this->status->value, ['reportado', 'en_revision'])) {
+            return false;
+        }
+
+        // Check if reported_at exists
+        if (!$this->reported_at) {
+            return false;
+        }
+
+        $daysSinceReported = now()->diffInDays($this->reported_at);
+
+        return abs($daysSinceReported) > 60;
+
+        return $result;
     }
 
     /**
@@ -254,5 +275,29 @@ final class IncidentReport extends ParentModel
     public function getFormattedReportedAtAttribute(): ?string
     {
         return $this->reported_at?->format('d/m/Y H:i');
+    }
+
+    /**
+     * Get the severity level as enum instance.
+     */
+    public function getSeverityLevelAttribute(?string $value): ?IncidentSeverity
+    {
+        return $value ? IncidentSeverity::from($value) : null;
+    }
+
+    /**
+     * Set the severity level from enum instance.
+     */
+    public function setSeverityLevelAttribute(IncidentSeverity|string|null $value): void
+    {
+        if ($value instanceof IncidentSeverity) {
+            $this->attributes['severity_level'] = $value->value;
+        } elseif (is_string($value)) {
+            // Validate that the string is a valid enum value
+            IncidentSeverity::from($value);
+            $this->attributes['severity_level'] = $value;
+        } else {
+            $this->attributes['severity_level'] = null;
+        }
     }
 }

@@ -21,8 +21,8 @@ final class CreateIncidentReportRequest extends ParentRequest
                     $fail('El tipo de incidente especificado no es válido.');
                 }
             }],
-            'severity_level' => ['required', 'string', function ($attribute, $value, $fail) {
-                if (!IncidentSeverity::tryFrom($value)) {
+            'severity_level' => ['nullable', 'string', function ($attribute, $value, $fail) {
+                if ($value && !IncidentSeverity::tryFrom($value)) {
                     $fail('El nivel de gravedad especificado no es válido.');
                 }
             }],
@@ -40,6 +40,7 @@ final class CreateIncidentReportRequest extends ParentRequest
             // 'evidence_files.*' => 'file|mimes:jpeg,jpg,png,gif,webp|max:10240', // Máximo 10MB por archivo
             'actions_taken' => 'nullable|string|max:2000',
             'additional_comments' => 'nullable|string|max:2000',
+            'escalated_to' => 'nullable|string|max:255',
             'childcare_center_id' => 'nullable|exists:childcare_centers,id',
             'room_id' => 'nullable|exists:rooms,id',
         ];
@@ -51,7 +52,7 @@ final class CreateIncidentReportRequest extends ParentRequest
             'child_id.required' => 'El ID del niño es obligatorio.',
             'child_id.exists' => 'El niño especificado no existe.',
             'type.required' => 'El tipo de incidente es obligatorio.',
-            'severity_level.required' => 'El nivel de gravedad es obligatorio.',
+            'severity_level.string' => 'El nivel de gravedad debe ser una cadena de texto.',
             'description.required' => 'La descripción es obligatoria.',
             'description.min' => 'La descripción debe tener al menos 10 caracteres.',
             'description.max' => 'La descripción no puede exceder 5000 caracteres.',

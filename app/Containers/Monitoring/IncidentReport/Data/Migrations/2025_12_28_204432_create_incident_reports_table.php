@@ -23,7 +23,7 @@ return new class() extends Migration {
             $table->string('type', 50)->comment('Tipo: accidente, conducta_inapropiada, lesion_fisica, negligencia, maltrato_psicologico, maltrato_fisico, otro');
             
             // Nivel de gravedad (enum: leve, moderado, grave, critico)
-            $table->string('severity_level', 50)->comment('Nivel de gravedad: leve, moderado, grave, critico');
+            $table->string('severity_level', 50)->nullable()->comment('Nivel de gravedad: leve, moderado, grave, critico');
             
             // Descripción del incidente
             $table->text('description')->comment('Descripción detallada del incidente');
@@ -96,7 +96,6 @@ return new class() extends Migration {
             $table->index('status');
             $table->index('child_id');
             $table->index('type');
-            $table->index('severity_level');
             $table->index('incident_date');
             $table->index('reported_by');
             $table->index('childcare_center_id');

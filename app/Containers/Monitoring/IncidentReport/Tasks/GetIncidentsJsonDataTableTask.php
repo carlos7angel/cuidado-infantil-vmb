@@ -85,10 +85,6 @@ final class GetIncidentsJsonDataTableTask extends ParentTask
                 $query = $query->where('type', '=', $searchType);
             }
 
-            // Filter by severity (exact match)
-            if (!empty($searchSeverity)) {
-                $query = $query->where('severity_level', '=', $searchSeverity);
-            }
 
             // Filter by status (exact match)
             if (!empty($searchStatus)) {
@@ -132,6 +128,10 @@ final class GetIncidentsJsonDataTableTask extends ParentTask
         $transformedData = [];
         foreach ($data as $item) {
             $child = $item->child;
+
+            // Check if incident needs attention using model method
+            $needsAttention = $item->needsAttention();
+
             $transformedData[] = [
                 'id' => $item->id,
                 'code' => $item->code,
@@ -151,6 +151,8 @@ final class GetIncidentsJsonDataTableTask extends ParentTask
                 'incident_date' => $item->incident_date ? $item->incident_date->format('d/m/Y') : '-',
                 'reported_at' => $item->reported_at ? $item->reported_at->format('d/m/Y H:i') : '-',
                 'reported_by' => $item->reportedBy ? $item->reportedBy->name : '-',
+                'escalated_to' => $item->escalated_to ?: '-',
+                'needs_attention' => $needsAttention,
             ];
         }
 

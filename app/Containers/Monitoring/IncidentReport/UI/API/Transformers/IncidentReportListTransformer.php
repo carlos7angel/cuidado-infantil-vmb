@@ -27,9 +27,9 @@ final class IncidentReportListTransformer extends ParentTransformer
             'status_label' => $incidentReport->status->label(),
             'type' => $incidentReport->type->value,
             'type_label' => $incidentReport->type->label(),
-            'severity_level' => $incidentReport->severity_level->value,
-            'severity_label' => $incidentReport->severity_level->label(),
-            'severity_color' => $incidentReport->severity_level->color(),
+            'severity_level' => $incidentReport->severity_level?->value,
+            'severity_label' => $incidentReport->severity_level?->label() ?? 'Sin registro',
+            'severity_color' => $incidentReport->severity_level?->color() ?? '#9E9E9E',
             
             // Información básica del incidente
             'description' => $incidentReport->description,
@@ -64,7 +64,10 @@ final class IncidentReportListTransformer extends ParentTransformer
             // Fechas
             'reported_at' => $incidentReport->reported_at?->format('Y-m-d H:i:s'),
             'reported_at_readable' => $incidentReport->formatted_reported_at,
-            
+
+            // Escalamiento
+            'escalated_to' => $incidentReport->escalated_to,
+
             // Metadatos
             'created_at' => $incidentReport->created_at->format('Y-m-d H:i:s'),
             'readable_created_at' => $incidentReport->created_at->diffForHumans(),

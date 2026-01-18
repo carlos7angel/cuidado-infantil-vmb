@@ -47,6 +47,7 @@
  *             "requires_immediate_attention": false,
  *             "is_active": true,
  *             "reported_at": "2025-12-28 10:30:00",
+ *             "escalated_to": "Director del Centro",
  *             "created_at": "2025-12-28 10:30:00"
  *         }
  *     ],

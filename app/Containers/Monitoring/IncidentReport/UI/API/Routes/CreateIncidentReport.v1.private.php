@@ -15,7 +15,7 @@
  *
  * @apiParam           {String} child_id (obligatorio) ID del niño involucrado
  * @apiParam           {String} type (obligatorio) Tipo de incidente: accidente, conducta_inapropiada, lesion_fisica, negligencia, maltrato_psicologico, maltrato_fisico, otro
- * @apiParam           {String} severity_level (obligatorio) Nivel de gravedad: leve, moderado, grave, critico
+ * @apiParam           {String} severity_level (opcional) Nivel de gravedad: leve, moderado, grave, critico
  * @apiParam           {String} description (obligatorio) Descripción detallada del incidente (mínimo 10 caracteres)
  * @apiParam           {Date} incident_date (obligatorio) Fecha del incidente (formato: YYYY-MM-DD)
  * @apiParam           {Time} incident_time (opcional) Hora del incidente (formato: HH:mm)
@@ -27,6 +27,7 @@
  * @apiParam           {File[]} evidence_files (opcional) Archivos de evidencia (fotografías: jpeg, jpg, png, gif, webp, máximo 10MB cada uno)
  * @apiParam           {String} actions_taken (opcional) Acciones tomadas
  * @apiParam           {String} additional_comments (opcional) Comentarios adicionales
+ * @apiParam           {String} escalated_to (opcional) A quién fue escalado el caso
  * @apiParam           {String} childcare_center_id (opcional) ID del centro de cuidado (se obtiene automáticamente del enrollment activo si no se proporciona)
  * @apiParam           {String} room_id (opcional) ID de la sala (se obtiene automáticamente del enrollment activo si no se proporciona)
  *

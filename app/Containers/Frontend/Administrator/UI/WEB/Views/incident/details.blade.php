@@ -71,11 +71,6 @@
                             <div class="fs-5 fw-bold text-muted mb-3">
                                 {{ $incident->type?->label() ?? '-' }}
                             </div>
-                            <div class="mb-3">
-                                <div class="badge badge-lg {{ $badgeClass }} d-block mb-2">
-                                    {{ $incident->severity_level?->label() ?? 'Sin severidad' }}
-                                </div>
-                            </div>
                             <div class="mb-5 w-100">
                                 <label class="fs-7 fw-bold text-gray-600 mb-2 d-block">Estado:</label>
                                 <select id="kt_incident_status_select" 
@@ -253,7 +248,7 @@
                         @if($incident->description)
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-control form-control-plaintext" style="min-height: 100px; white-space: pre-wrap;">{{ $incident->description }}</div>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->description }}</div>
                             </div>
                         </div>
                         @else
@@ -263,25 +258,37 @@
                         @endif
 
                         @if($incident->people_involved)
-                        <div class="separator separator-dashed border-muted my-8"></div>
+                        <div class="separator separator-dashed border-muted"></div>
                         <div class="row">
                             <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
                                 <label class="fw-semibold fs-7 text-gray-600">Personas Involucradas:</label>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->people_involved }}</div>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->people_involved }}</div>
                             </div>
                         </div>
                         @endif
 
                         @if($incident->witnesses)
-                        <div class="separator separator-dashed border-muted my-8"></div>
+                        <div class="separator separator-dashed border-muted"></div>
                         <div class="row">
                             <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
                                 <label class="fw-semibold fs-7 text-gray-600">Testigos:</label>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->witnesses }}</div>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->witnesses }}</div>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if($incident->escalated_to)
+                        <div class="separator separator-dashed border-muted"></div>
+                        <div class="row">
+                            <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
+                                <label class="fw-semibold fs-7 text-gray-600">Reportado a:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->escalated_to }}</div>
                             </div>
                         </div>
                         @endif
@@ -290,48 +297,6 @@
                 </div>
                 <!--end::Descripción del Incidente-->
 
-                <!--begin::Acciones y Comentarios-->
-                @if($incident->actions_taken || $incident->additional_comments)
-                <div class="card card-flush mb-6 mb-xl-9">
-                    <div class="card-header mt-6">
-                        <div class="card-title flex-column">
-                            <h2 class="mb-1">Acciones y Comentarios</h2>
-                            <div class="fs-6 fw-semibold text-muted">
-                                Información sobre las acciones realizadas
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-body p-9 pt-4">
-                        @if($incident->actions_taken)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
-                                <label class="fw-semibold fs-7 text-gray-600">Acciones Tomadas:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->actions_taken }}</div>
-                            </div>
-                        </div>
-                        @if($incident->additional_comments)
-                        <div class="separator separator-dashed border-muted my-8"></div>
-                        @endif
-                        @endif
-
-                        @if($incident->additional_comments)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
-                                <label class="fw-semibold fs-7 text-gray-600">Comentarios Adicionales:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->additional_comments }}</div>
-                            </div>
-                        </div>
-                        @endif
-
-                    </div>
-                </div>
-                @endif
-                <!--end::Acciones Tomadas y Comentarios-->
 
                 <!--begin::Evidencia-->
                 @if($incident->has_evidence)
@@ -352,10 +317,10 @@
                                 <label class="fw-semibold fs-7 text-gray-600">Descripción de la Evidencia:</label>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->evidence_description }}</div>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->evidence_description }}</div>
                             </div>
                         </div>
-                        <div class="separator separator-dashed border-muted mb-8"></div>
+                        <div class="separator separator-dashed border-muted"></div>
                         @endif
 
                         @php
@@ -426,142 +391,54 @@
                 @endif
                 <!--end::Evidencia-->
 
-                <!--begin::Información Adicional-->
-                @if($incident->closed_date || $incident->evaluatedBy || $incident->evaluation_date || $incident->evaluation_result || $incident->escalated_date || $incident->escalation_reason || $incident->requires_authority_notification || $incident->notified_to_authorities || $incident->authority_notification_date || $incident->authority_notification_details || $incident->follow_up_required || $incident->next_follow_up_date || $incident->follow_up_notes || $incident->preventive_measures)
+                <!--begin::Seguimiento-->
+                @if($incident->actions_taken || $incident->additional_comments || $incident->follow_up_notes || $incident->authority_notification_details)
                 <div class="card card-flush mb-6 mb-xl-9">
                     <div class="card-header mt-6">
                         <div class="card-title flex-column">
-                            <h2 class="mb-1">Información Adicional</h2>
+                            <h2 class="mb-1">Seguimiento</h2>
                             <div class="fs-6 fw-semibold text-muted">
-                                Información adicional del seguimiento del incidente
+                                Información del seguimiento y resolución del incidente
                             </div>
                         </div>
                     </div>
 
                     <div class="card-body p-9 pt-4">
-                        <h6 class="mb-5 fw-bolder text-primary">Datos registrados</h6>
-
-                        @if($incident->closed_date)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Fecha de Cierre:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p class="form-control form-control-plaintext">
-                                    {{ $incident->closed_date->locale('es')->translatedFormat('d \de F \de Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-
-                        @if($incident->evaluatedBy)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Evaluado por:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p class="form-control form-control-plaintext">{{ $incident->evaluatedBy->name }}</p>
-                            </div>
-                        </div>
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-
-                        @if($incident->evaluation_date)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Fecha de Evaluación:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p class="form-control form-control-plaintext">
-                                    {{ $incident->evaluation_date->locale('es')->translatedFormat('d \de F \de Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-
-                        @if($incident->evaluation_result)
+                        @if($incident->actions_taken)
                         <div class="row">
                             <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
-                                <label class="fw-semibold fs-7 text-gray-600">Resultado de la Evaluación:</label>
+                                <label class="fw-semibold fs-7 text-gray-600">Acciones Tomadas:</label>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->evaluation_result }}</div>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->actions_taken }}</div>
                             </div>
                         </div>
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-
-                        @if($incident->escalated_date)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Fecha de Escalamiento:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p class="form-control form-control-plaintext">
-                                    {{ $incident->escalated_date->locale('es')->translatedFormat('d \de F \de Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        @if($incident->escalation_reason)
+                        @if($incident->additional_comments || $incident->follow_up_notes || $incident->authority_notification_details)
                         <div class="separator separator-dashed border-muted"></div>
                         @endif
                         @endif
 
-                        @if($incident->escalation_reason)
+                        @if($incident->additional_comments)
                         <div class="row">
                             <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
-                                <label class="fw-semibold fs-7 text-gray-600">Razón del Escalamiento:</label>
+                                <label class="fw-semibold fs-7 text-gray-600">Comentarios Adicionales:</label>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->escalation_reason }}</div>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->additional_comments }}</div>
                             </div>
                         </div>
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-
-                        @if($incident->requires_authority_notification !== null)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Requiere Notificación a Autoridades:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <span class="badge {{ $incident->requires_authority_notification ? 'badge-light-danger' : 'badge-light-success' }} fs-7 fw-bold">
-                                    {{ $incident->requires_authority_notification ? 'Sí' : 'No' }}
-                                </span>
-                            </div>
-                        </div>
-                        @if($incident->notified_to_authorities !== null || $incident->authority_notification_date || $incident->authority_notification_details)
+                        @if($incident->follow_up_notes || $incident->authority_notification_details)
                         <div class="separator separator-dashed border-muted"></div>
                         @endif
                         @endif
 
-                        @if($incident->notified_to_authorities !== null)
+                        @if($incident->follow_up_notes)
                         <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Notificado a Autoridades:</label>
+                            <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
+                                <label class="fw-semibold fs-7 text-gray-600">Notas de Seguimiento:</label>
                             </div>
                             <div class="col-md-8">
-                                <span class="badge {{ $incident->notified_to_authorities ? 'badge-light-success' : 'badge-light-warning' }} fs-7 fw-bold">
-                                    {{ $incident->notified_to_authorities ? 'Sí' : 'No' }}
-                                </span>
-                            </div>
-                        </div>
-                        @if($incident->authority_notification_date || $incident->authority_notification_details)
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-                        @endif
-
-                        @if($incident->authority_notification_date)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Fecha de Notificación a Autoridades:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p class="form-control form-control-plaintext">
-                                    {{ $incident->authority_notification_date->locale('es')->translatedFormat('d \de F \de Y') }}
-                                </p>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->follow_up_notes }}</div>
                             </div>
                         </div>
                         @if($incident->authority_notification_details)
@@ -575,71 +452,14 @@
                                 <label class="fw-semibold fs-7 text-gray-600">Detalles de Notificación a Autoridades:</label>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->authority_notification_details }}</div>
-                            </div>
-                        </div>
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-
-                        @if($incident->follow_up_required !== null)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Requiere Seguimiento:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <span class="badge {{ $incident->follow_up_required ? 'badge-light-warning' : 'badge-light-success' }} fs-7 fw-bold">
-                                    {{ $incident->follow_up_required ? 'Sí' : 'No' }}
-                                </span>
-                            </div>
-                        </div>
-                        @if($incident->next_follow_up_date || $incident->follow_up_notes)
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-                        @endif
-
-                        @if($incident->next_follow_up_date)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                <label class="fw-semibold fs-7 text-gray-600">Próxima Fecha de Seguimiento:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p class="form-control form-control-plaintext">
-                                    {{ $incident->next_follow_up_date->locale('es')->translatedFormat('d \de F \de Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        @if($incident->follow_up_notes)
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-                        @endif
-
-                        @if($incident->follow_up_notes)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
-                                <label class="fw-semibold fs-7 text-gray-600">Notas de Seguimiento:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->follow_up_notes }}</div>
-                            </div>
-                        </div>
-                        <div class="separator separator-dashed border-muted"></div>
-                        @endif
-
-                        @if($incident->preventive_measures)
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
-                                <label class="fw-semibold fs-7 text-gray-600">Medidas Preventivas:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-control form-control-plaintext" style="min-height: 80px; white-space: pre-wrap;">{{ $incident->preventive_measures }}</div>
+                                <div class="form-control form-control-plaintext" style="white-space: pre-wrap;">{{ $incident->authority_notification_details }}</div>
                             </div>
                         </div>
                         @endif
-
                     </div>
                 </div>
                 @endif
-                <!--end::Información Adicional-->
+                <!--end::Seguimiento-->
 
             </div>
             <!--end::Content-->

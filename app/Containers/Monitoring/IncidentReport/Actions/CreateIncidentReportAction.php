@@ -64,6 +64,7 @@ final class CreateIncidentReportAction extends ParentAction
                 'evidence_file_ids' => null, // Se actualizará después si hay archivos
                 'actions_taken' => $request->input('actions_taken'),
                 'additional_comments' => $request->input('additional_comments'),
+                'escalated_to' => $request->input('escalated_to'),
                 'childcare_center_id' => $childcareCenterId,
                 'room_id' => $roomId,
             ];

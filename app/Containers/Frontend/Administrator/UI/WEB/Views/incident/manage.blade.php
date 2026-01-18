@@ -86,15 +86,6 @@
                             </select>
                         </div>
                         <div class="col-lg-3">
-                            <label class="fs-6 form-label fw-bold text-gray-900">Nivel de Severidad</label>
-                            <select class="form-select form-select-sm datatable-input" data-control="select2" data-hide-search="false" data-col-index="5" name="kt_search_severity">
-                                <option value="">Todos</option>
-                                @foreach($incidentSeverities as $severity)
-                                    <option value="{{ $severity->value }}">{{ $severity->label() }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-3">
                             <label class="fs-6 form-label fw-bold text-gray-900">Estado</label>
                             <select class="form-select form-select-sm datatable-input" data-control="select2" data-hide-search="false" data-col-index="6" name="kt_search_status">
                                 <option value="">Todos</option>
@@ -114,6 +105,12 @@
                     <span class="text-gray-500 fs-6 ms-2"></span>
                 </h3>
             </div>
+            <div class="d-flex flex-wrap my-1">
+                <button type="button" id="kt_incident_report_btn" class="btn btn-success" data-url="{{ route('admin.incident.report.excel') }}">
+                    <i class="ki-outline ki-file-down fs-3 me-2"></i>
+                    Generar Reporte
+                </button>
+            </div>
         </div>
 
         <div class="card card-flush">
@@ -127,7 +124,6 @@
                         <th class="text-start min-w-250px" name="child_name">Infante</th>
                         <th class="text-center min-w-200px" name="childcare_center_name">Centro / Sala</th>
                         <th class="text-start min-w-150px" name="type">Tipo</th>
-                        <th class="text-center min-w-120px" name="severity">Severidad</th>
                         <th class="text-center min-w-120px" name="status">Estado</th>
                         <th class="text-center min-w-120px" name="incident_date">Fecha Incidente</th>
                         <th class="text-end min-w-70px">Opciones</th>
@@ -137,6 +133,14 @@
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Legend for attention-needed incidents -->
+        <div class="d-flex justify-content-center align-items-center mt-4 mb-4">
+            <div class="d-flex align-items-center me-4">
+                <div class="w-20px h-20px rounded me-2" style="background-color: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.3);"></div>
+                <span class="fs-7 fw-semibold text-gray-700">Incidentes que requieren atención (más de 60 días sin resolver)</span>
             </div>
         </div>
 

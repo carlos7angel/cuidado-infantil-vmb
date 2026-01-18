@@ -33,9 +33,9 @@ final class IncidentReportTransformer extends ParentTransformer
             'status_label' => $incidentReport->status->label(),
             'type' => $incidentReport->type->value,
             'type_label' => $incidentReport->type->label(),
-            'severity_level' => $incidentReport->severity_level->value,
-            'severity_label' => $incidentReport->severity_level->label(),
-            'severity_color' => $incidentReport->severity_level->color(),
+            'severity_level' => $incidentReport->severity_level?->value,
+            'severity_label' => $incidentReport->severity_level?->label() ?? 'Sin registro',
+            'severity_color' => $incidentReport->severity_level?->color() ?? '#9E9E9E',
             
             // Información del incidente
             'description' => $incidentReport->description,
@@ -58,6 +58,8 @@ final class IncidentReportTransformer extends ParentTransformer
             // Acciones y comentarios
             'actions_taken' => $incidentReport->actions_taken,
             'additional_comments' => $incidentReport->additional_comments,
+            'follow_up_notes' => $incidentReport->follow_up_notes,
+            'escalated_to' => $incidentReport->escalated_to,
             
             // Fechas
             'reported_at' => $incidentReport->reported_at?->format('Y-m-d H:i:s'),
@@ -68,7 +70,10 @@ final class IncidentReportTransformer extends ParentTransformer
             'requires_immediate_attention' => $incidentReport->requiresImmediateAttention(),
             'requires_authority_notification' => $incidentReport->requiresAuthorityNotification(),
             'is_active' => $incidentReport->isActive(),
-            
+
+            // Detalles de notificación a autoridades
+            'authority_notification_details' => $incidentReport->authority_notification_details,
+
             // Metadatos
             'created_at' => $incidentReport->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $incidentReport->updated_at->format('Y-m-d H:i:s'),

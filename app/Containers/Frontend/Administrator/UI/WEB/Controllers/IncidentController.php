@@ -6,9 +6,9 @@ use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\GetIncidentsJ
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\ShowIncidentRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\UpdateIncidentStatusRequest;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
+use App\Containers\Monitoring\IncidentReport\Actions\GenerateIncidentsReportAction;
 use App\Containers\Monitoring\IncidentReport\Actions\GetIncidentsJsonDataTableAction;
 use App\Containers\Monitoring\IncidentReport\Actions\UpdateIncidentReportStatusAction;
-use App\Containers\Monitoring\IncidentReport\Enums\IncidentSeverity;
 use App\Containers\Monitoring\IncidentReport\Enums\IncidentStatus;
 use App\Containers\Monitoring\IncidentReport\Enums\IncidentType;
 use App\Containers\Monitoring\IncidentReport\Tasks\FindIncidentReportByIdTask;
@@ -27,7 +27,6 @@ final class IncidentController extends WebController
         $childcareCenters = ChildcareCenter::orderBy('name')->get();
         $rooms = Room::with('childcareCenter')->orderBy('name')->get();
         $incidentTypes = IncidentType::cases();
-        $incidentSeverities = IncidentSeverity::cases();
         $incidentStatuses = IncidentStatus::cases();
 
         return view('frontend@administrator::incident.manage', compact(
@@ -35,7 +34,6 @@ final class IncidentController extends WebController
             'childcareCenters',
             'rooms',
             'incidentTypes',
-            'incidentSeverities',
             'incidentStatuses'
         ));
     }
@@ -88,6 +86,15 @@ final class IncidentController extends WebController
                 'success' => false,
                 'message' => 'Error al actualizar el estado: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function generateIncidentsReport()
+    {
+        try {
+            return app(GenerateIncidentsReportAction::class)->run();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el reporte: ' . $e->getMessage());
         }
     }
 }

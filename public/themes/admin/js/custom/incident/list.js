@@ -58,7 +58,6 @@ var KTIncidentsList = function () {
                 {data: 'child_name', name: "child_name"},
                 {data: 'childcare_center_name', name: "childcare_center_name"},
                 {data: 'type', name: "type"},
-                {data: 'severity', name: "severity"},
                 {data: 'status', name: "status"},
                 {data: 'incident_date', name: "incident_date"},
                 {data: null, responsivePriority: -1},
@@ -66,7 +65,7 @@ var KTIncidentsList = function () {
 
             // Order settings
             order: [
-                [7, 'desc']
+                [6, 'desc']
             ],
 
             columnDefs: [
@@ -141,39 +140,9 @@ var KTIncidentsList = function () {
                     searchable: true,
                     className: 'text-center pe-0',
                     render: function (data, type, full, meta) {
-                        var severityValue = full.severity_value;
-                        var severityColor = full.severity_color;
-                        var badgeClass = 'badge-light-secondary';
-                        var colorClass = 'text-secondary';
-                        
-                        if (severityColor) {
-                            if (severityColor === '#4CAF50') {
-                                badgeClass = 'badge-light-success';
-                                colorClass = 'text-success';
-                            } else if (severityColor === '#FF9800') {
-                                badgeClass = 'badge-light-warning';
-                                colorClass = 'text-warning';
-                            } else if (severityColor === '#F44336') {
-                                badgeClass = 'badge-light-danger';
-                                colorClass = 'text-danger';
-                            } else if (severityColor === '#9C27B0') {
-                                badgeClass = 'badge-light-info';
-                                colorClass = 'text-info';
-                            }
-                        }
-                        
-                        return `<span class="badge ${badgeClass} fs-7 fw-bold">${data || '-'}</span>`;
-                    },
-                },
-                {
-                    targets: 6,
-                    orderable: true,
-                    searchable: true,
-                    className: 'text-center pe-0',
-                    render: function (data, type, full, meta) {
                         var statusValue = full.status_value;
                         var badgeClass = 'badge-light-secondary';
-                        
+
                         if (statusValue) {
                             switch(statusValue) {
                                 case 'reportado':
@@ -193,12 +162,12 @@ var KTIncidentsList = function () {
                                     break;
                             }
                         }
-                        
+
                         return `<span class="badge ${badgeClass} fs-7 fw-bold">${data || '-'}</span>`;
                     },
                 },
                 {
-                    targets: 7,
+                    targets: 6,
                     orderable: true,
                     searchable: true,
                     className: 'text-center pe-0',
@@ -219,6 +188,13 @@ var KTIncidentsList = function () {
                     },
                 },
             ],
+
+            // Row styling for incidents that need attention
+            createdRow: function (row, data, dataIndex) {
+                if (data.needs_attention) {
+                    $(row).css('background-color', 'rgba(220, 53, 69, 0.2)'); // Even stronger red background for attention-needed incidents
+                }
+            },
         });
 
         $('#kt_search').on('click', function (e) {
@@ -263,6 +239,38 @@ var KTIncidentsList = function () {
             $('select[name="kt_search_room"]').val('').trigger('change');
 
             datatable.table().draw();
+        });
+
+        // Handle report button
+        $('#kt_incident_report_btn').on('click', function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var originalText = button.html();
+            var reportUrl = button.data('url');
+
+            if (!reportUrl) {
+                console.error('Report URL not found');
+                return;
+            }
+
+            // Disable button and show loading state
+            button.prop('disabled', true);
+            button.html('<span class="spinner-border spinner-border-sm me-2" role="status"></span>Generando reporte...');
+
+            // Create temporary link and trigger download
+            var link = document.createElement('a');
+            link.href = reportUrl;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Reset button after a delay
+            setTimeout(function() {
+                button.prop('disabled', false);
+                button.html(originalText);
+            }, 3000); // 3 seconds should be enough for most downloads
         });
     }
 
