@@ -49,6 +49,7 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
             'Idioma',
             'Departamento',
             'Ciudad',
+            'Municipio',
             'Dirección',
             'Centro Infantil',
             'Sala/Grupo',
@@ -70,6 +71,8 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
             'Déficits Detalle',
             'Tiene Enfermedades',
             'Detalle Enfermedades',
+            'Habilidades Destacadas',
+            'Problemas de Nutrición',
             'Otras Observaciones Médicas',
             'Infante a cargo de',
             'Total Egresos (Bs.)',
@@ -83,6 +86,8 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
             'Servicios Públicos',
             'Tipo de Transporte',
             'Tiempo de Viaje',
+            'Antecedentes de Incidentes',
+            'Mascotas',
             'Doc: Carta Solicitud Admisión',
             'Doc: Compromiso',
             'Doc: Certificado Nacimiento',
@@ -191,23 +196,16 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
                 : '';
 
             $housingWallMaterial = $social && $social->housing_wall_material
-                ? ucfirst($social->housing_wall_material)
+                ? $social->housing_wall_material->label()
                 : '';
 
             $housingFloorMaterial = $social && $social->housing_floor_material
-                ? ucfirst($social->housing_floor_material)
+                ? $social->housing_floor_material->label()
                 : '';
 
-            $housingFinish = '';
-            if ($social && $social->housing_finish) {
-                if ($social->housing_finish === 'obra_fina') {
-                    $housingFinish = 'Obra Fina';
-                } elseif ($social->housing_finish === 'obra_gruesa') {
-                    $housingFinish = 'Obra Gruesa';
-                } else {
-                    $housingFinish = ucfirst($social->housing_finish);
-                }
-            }
+            $housingFinish = $social && $social->housing_finish
+                ? $social->housing_finish->label()
+                : '';
 
             $housingBedrooms = $social && $social->housing_bedrooms !== null
                 ? $social->housing_bedrooms
@@ -220,17 +218,9 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
 
             $housingUtilities = '';
             if ($social && is_array($social->housing_utilities) && count($social->housing_utilities) > 0) {
-                $labels = [
-                    'agua_potable' => 'Agua Potable',
-                    'energia_electrica' => 'Energía Eléctrica',
-                    'alcantarillado' => 'Alcantarillado',
-                    'gas' => 'Gas',
-                    'telefono' => 'Teléfono',
-                    'internet' => 'Internet',
-                ];
-
-                $items = array_map(function ($util) use ($labels) {
-                    return $labels[$util] ?? ucfirst(str_replace('_', ' ', $util));
+                $items = array_map(function ($util) {
+                    $enum = \App\Containers\Monitoring\Child\Enums\HousingUtility::tryFrom($util);
+                    return $enum ? $enum->label() : ucfirst(str_replace('_', ' ', $util));
                 }, $social->housing_utilities);
 
                 $housingUtilities = implode(', ', $items);
@@ -287,6 +277,8 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
                 $deficitsText,
                 $hasIllness,
                 $illnessDetails,
+                $medical && $medical->outstanding_skills ? $medical->outstanding_skills : '',
+                $medical && $medical->nutritional_problems ? $medical->nutritional_problems : '',
                 $otherMedicalObservations,
                 $guardianType,
                 $totalExpenses,
@@ -300,6 +292,8 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
                 $housingUtilities,
                 $transportType,
                 $travelTime,
+                $social && $social->incident_history ? $social->incident_history : '',
+                $social && $social->pets ? $social->pets : '',
                 $admissionRequestFile,
                 $commitmentFile,
                 $birthCertificateFile,

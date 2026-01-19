@@ -45,6 +45,7 @@ final class CreateChildAction extends ParentAction
             'gender',
             'state',
             'city',
+            'municipality',
             'address',
 
             // Enrollment information
@@ -71,6 +72,8 @@ final class CreateChildAction extends ParentAction
             'deficit_motor',
             'has_illness',
             'illness_details',
+            'outstanding_skills',
+            'nutritional_problems',
             'other_observations',
 
             // Social information
@@ -85,6 +88,8 @@ final class CreateChildAction extends ParentAction
             'housing_utilities',
             'transport_type',
             'travel_time',
+            'incident_history',
+            'pets',
 
             // Family members (will be processed separately)
             // 'family_members',
@@ -106,6 +111,7 @@ final class CreateChildAction extends ParentAction
                 'state' => $data['state'] ?? null,
                 'city' => $data['city'] ?? null,
                 'address' => $data['address'] ?? null,
+                'municipality' => $data['municipality'] ?? null,
                 'language' => $data['language'] ?? null,
             ];
             $child = $this->createChildTask->run($generalData);
@@ -132,7 +138,11 @@ final class CreateChildAction extends ParentAction
                 'deficit_motor' => $data['deficit_motor'] ?? null,
                 'has_illness' => $data['has_illness'] ?? false,
                 'illness_details' => $data['illness_details'] ?? null,
+                'outstanding_skills' => $data['outstanding_skills'] ?? null,
+                'nutritional_problems' => $data['nutritional_problems'] ?? null,
                 'other_observations' => $data['other_observations'] ?? null,
+                'incident_history' => $data['incident_history'] ?? null,
+                'pets' => $data['pets'] ?? null,
             ];
             $this->createChildMedicalRecordTask->run($medicalRecordData);
 
@@ -150,6 +160,8 @@ final class CreateChildAction extends ParentAction
                 'housing_utilities' => $data['housing_utilities'] ?? null,
                 'transport_type' => $data['transport_type'] ?? null,
                 'travel_time' => $data['travel_time'] ?? null,
+                'incident_history' => $data['incident_history'] ?? null,
+                'pets' => $data['pets'] ?? null,
             ];
             $socialRecord = $this->createChildSocialRecordTask->run($socialRecordData);
 

@@ -44,6 +44,7 @@ final class ChildTransformer extends ParentTransformer
                 'country' => $child->country,
                 'state' => $child->state,
                 'city' => $child->city,
+                'municipality' => $child->municipality,
                 'address' => $child->address,
             ],
 
@@ -89,6 +90,8 @@ final class ChildTransformer extends ParentTransformer
                 'illness_details' => $record->illness_details,
                 'medical_report_document' => $record->medical_report_document,
                 'diagnosis_document' => $record->diagnosis_document,
+                'outstanding_skills' => $record->outstanding_skills,
+                'nutritional_problems' => $record->nutritional_problems,
                 'other_observations' => $record->other_observations,
                 'created_at' => $record->created_at,
                 'updated_at' => $record->updated_at,
@@ -151,6 +154,8 @@ final class ChildTransformer extends ParentTransformer
 
                 // Assessment
                 'family_history' => $record->family_history,
+                'incident_history' => $record->incident_history,
+                'pets' => $record->pets,
                 'professional_assessment' => $record->professional_assessment,
 
                 'created_at' => $record->created_at,

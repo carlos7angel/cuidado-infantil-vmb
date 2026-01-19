@@ -162,23 +162,49 @@
                                     </div>
                                     <div class="col-md-8">
                                         <p class="form-control form-control-plaintext">
-                                            {{ trim(($child->address ?? '') . ', ' . ($child->city ?? '') . ', ' . ($child->state ?? ''), ', ') ?: '-' }}
+                                            {{ $child->address ?? '-' }}
                                         </p>
                                     </div>
                                 </div>
 
-                                @if($child->country)
                                 <div class="separator separator-dashed border-muted"></div>
 
                                 <div class="row">
                                     <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">País:</label>
+                                        <label class="fw-semibold fs-7 text-gray-600">Ciudad:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">{{ $child->country }}</p>
+                                        <p class="form-control form-control-plaintext">
+                                            {{ $child->city ?? '-' }}
+                                        </p>
                                     </div>
                                 </div>
-                                @endif
+
+                                <div class="separator separator-dashed border-muted"></div>
+
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
+                                        <label class="fw-semibold fs-7 text-gray-600">Municipio:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="form-control form-control-plaintext">
+                                            {{ $child->municipality ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="separator separator-dashed border-muted"></div>
+
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
+                                        <label class="fw-semibold fs-7 text-gray-600">Departamento:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="form-control form-control-plaintext">
+                                            {{ $child->state ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
 
                                 @if($child->language)
                                 <div class="separator separator-dashed border-muted"></div>
@@ -334,6 +360,32 @@
 
                                 <div class="row">
                                     <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
+                                        <label class="fw-semibold fs-7 text-gray-600">Habilidades Destacadas:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="form-control form-control-plaintext">
+                                            {{ $child->medicalRecord->outstanding_skills ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="separator separator-dashed border-muted"></div>
+
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
+                                        <label class="fw-semibold fs-7 text-gray-600">Problemas de Nutrición:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="form-control form-control-plaintext">
+                                            {{ $child->medicalRecord->nutritional_problems ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="separator separator-dashed border-muted"></div>
+
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
                                         <label class="fw-semibold fs-7 text-gray-600">Otras Observaciones:</label>
                                     </div>
                                     <div class="col-md-8">
@@ -454,123 +506,6 @@
 
                                 <div class="row">
                                     <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Alimentación:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_food) ? 'Bs. ' . number_format($child->socialRecord->expense_food, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Educación:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_education) ? 'Bs. ' . number_format($child->socialRecord->expense_education, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Vivienda:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_housing) ? 'Bs. ' . number_format($child->socialRecord->expense_housing, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Transporte:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_transport) ? 'Bs. ' . number_format($child->socialRecord->expense_transport, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Vestimenta:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_clothing) ? 'Bs. ' . number_format($child->socialRecord->expense_clothing, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Servicios Básicos:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_utilities) ? 'Bs. ' . number_format($child->socialRecord->expense_utilities, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Salud:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_health) ? 'Bs. ' . number_format($child->socialRecord->expense_health, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Deudas:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_debts) ? 'Bs. ' . number_format($child->socialRecord->expense_debts, 2) : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
-                                        <label class="fw-semibold fs-7 text-gray-600">Detalle de Deudas:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->expense_debts_detail) ? $child->socialRecord->expense_debts_detail : '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="separator separator-dashed border-muted"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
                                         <label class="fw-semibold fs-7 text-gray-600">Total de Egresos:</label>
                                     </div>
                                     <div class="col-md-8">
@@ -615,7 +550,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->housing_wall_material) ? ucfirst($child->socialRecord->housing_wall_material) : '-' }}
+                                            {{ ($child->socialRecord && $child->socialRecord->housing_wall_material) ? $child->socialRecord->housing_wall_material->label() : '-' }}
                                         </p>
                                     </div>
                                 </div>
@@ -628,7 +563,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <p class="form-control form-control-plaintext">
-                                            {{ ($child->socialRecord && $child->socialRecord->housing_floor_material) ? ucfirst($child->socialRecord->housing_floor_material) : '-' }}
+                                            {{ ($child->socialRecord && $child->socialRecord->housing_floor_material) ? $child->socialRecord->housing_floor_material->label() : '-' }}
                                         </p>
                                     </div>
                                 </div>
@@ -641,11 +576,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <p class="form-control form-control-plaintext">
-                                            @if($child->socialRecord && $child->socialRecord->housing_finish)
-                                                {{ $child->socialRecord->housing_finish === 'obra_fina' ? 'Obra Fina' : ($child->socialRecord->housing_finish === 'obra_gruesa' ? 'Obra Gruesa' : ucfirst($child->socialRecord->housing_finish)) }}
-                                            @else
-                                                -
-                                            @endif
+                                            {{ ($child->socialRecord && $child->socialRecord->housing_finish) ? $child->socialRecord->housing_finish->label() : '-' }}
                                         </p>
                                     </div>
                                 </div>
@@ -690,19 +621,25 @@
                                         <p class="form-control form-control-plaintext">
                                             @if($child->socialRecord && $child->socialRecord->housing_utilities && is_array($child->socialRecord->housing_utilities) && count($child->socialRecord->housing_utilities) > 0)
                                                 {{ implode(', ', array_map(function($util) {
-                                                    $labels = [
-                                                        'agua_potable' => 'Agua Potable',
-                                                        'energia_electrica' => 'Energía Eléctrica',
-                                                        'alcantarillado' => 'Alcantarillado',
-                                                        'gas' => 'Gas',
-                                                        'telefono' => 'Teléfono',
-                                                        'internet' => 'Internet',
-                                                    ];
-                                                    return $labels[$util] ?? ucfirst(str_replace('_', ' ', $util));
+                                                    $enum = \App\Containers\Monitoring\Child\Enums\HousingUtility::tryFrom($util);
+                                                    return $enum ? $enum->label() : ucfirst(str_replace('_', ' ', $util));
                                                 }, $child->socialRecord->housing_utilities)) }}
                                             @else
                                                 -
                                             @endif
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="separator separator-dashed border-muted"></div>
+
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-center justify-content-end text-end">
+                                        <label class="fw-semibold fs-7 text-gray-600">Tenencia de Mascotas:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="form-control form-control-plaintext">
+                                            {{ ($child->socialRecord && $child->socialRecord->pets) ? $child->socialRecord->pets : '-' }}
                                         </p>
                                     </div>
                                 </div>
@@ -757,6 +694,19 @@
                                     <div class="col-md-8">
                                         <p class="form-control form-control-plaintext">
                                             {{ ($child->socialRecord && $child->socialRecord->professional_assessment) ? $child->socialRecord->professional_assessment : '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="separator separator-dashed border-muted"></div>
+
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-start justify-content-end text-end pt-4">
+                                        <label class="fw-semibold fs-7 text-gray-600">Historial de Incidentes:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="form-control form-control-plaintext">
+                                            {{ ($child->socialRecord && $child->socialRecord->incident_history) ? $child->socialRecord->incident_history : '-' }}
                                         </p>
                                     </div>
                                 </div>

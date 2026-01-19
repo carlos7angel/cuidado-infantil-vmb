@@ -45,6 +45,7 @@ final class UpdateChildAction extends ParentAction
             'gender',
             'state',
             'city',
+            'municipality',
             'address',
 
             // Enrollment information
@@ -70,6 +71,8 @@ final class UpdateChildAction extends ParentAction
             'deficit_motor',
             'has_illness',
             'illness_details',
+            'outstanding_skills',
+            'nutritional_problems',
             'other_observations',
 
             // Social information
@@ -84,6 +87,8 @@ final class UpdateChildAction extends ParentAction
             'housing_utilities',
             'transport_type',
             'travel_time',
+            'incident_history',
+            'pets',
         ]);
 
         return DB::transaction(function () use ($data, $request) {
@@ -99,6 +104,7 @@ final class UpdateChildAction extends ParentAction
                 'birth_date' => $data['birth_date'] ?? null,
                 'state' => $data['state'] ?? null,
                 'city' => $data['city'] ?? null,
+                'municipality' => $data['municipality'] ?? null,
                 'address' => $data['address'] ?? null,
             ], fn($value) => $value !== null);
 
@@ -128,6 +134,8 @@ final class UpdateChildAction extends ParentAction
                 'has_illness' => $data['has_illness'] ?? null,
                 'illness_details' => $data['illness_details'] ?? null,
                 'other_observations' => $data['other_observations'] ?? null,
+                'outstanding_skills' => $data['outstanding_skills'] ?? null,
+                'nutritional_problems' => $data['nutritional_problems'] ?? null,
             ], fn($value) => $value !== null);
 
             if (!empty($medicalRecordData)) {
@@ -147,6 +155,8 @@ final class UpdateChildAction extends ParentAction
                 'housing_utilities' => $data['housing_utilities'] ?? null,
                 'transport_type' => $data['transport_type'] ?? null,
                 'travel_time' => $data['travel_time'] ?? null,
+                'incident_history' => $data['incident_history'] ?? null,
+                'pets' => $data['pets'] ?? null,
             ], fn($value) => $value !== null);
 
             // Obtener o actualizar social record

@@ -3,8 +3,11 @@
 namespace App\Containers\Monitoring\Child\Models;
 
 use App\Containers\Monitoring\Child\Enums\GuardianType;
+use App\Containers\Monitoring\Child\Enums\HousingFinish;
+use App\Containers\Monitoring\Child\Enums\HousingFloorMaterial;
 use App\Containers\Monitoring\Child\Enums\HousingTenure;
 use App\Containers\Monitoring\Child\Enums\HousingType;
+use App\Containers\Monitoring\Child\Enums\HousingWallMaterial;
 use App\Containers\Monitoring\Child\Enums\TransportType;
 use App\Containers\Monitoring\Child\Enums\TravelTime;
 use App\Ship\Parents\Models\Model as ParentModel;
@@ -48,6 +51,8 @@ final class ChildSocialRecord extends ParentModel
         'work_sketch',
         // Historia
         'family_history',
+        'incident_history',
+        'pets',
         'professional_assessment',
     ];
 
@@ -58,6 +63,9 @@ final class ChildSocialRecord extends ParentModel
         'guardian_type' => GuardianType::class,
         'housing_type' => HousingType::class,
         'housing_tenure' => HousingTenure::class,
+        'housing_wall_material' => HousingWallMaterial::class,
+        'housing_floor_material' => HousingFloorMaterial::class,
+        'housing_finish' => HousingFinish::class,
         'transport_type' => TransportType::class,
         'travel_time' => TravelTime::class,
         'housing_rooms' => 'array',

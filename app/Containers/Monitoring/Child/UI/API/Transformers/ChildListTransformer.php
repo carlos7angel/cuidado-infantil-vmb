@@ -68,6 +68,8 @@ final class ChildListTransformer extends ParentTransformer
                 'has_medical_treatment' => $record->has_medical_treatment,
                 'has_deficit' => $record->has_deficit,
                 'has_illness' => $record->has_illness,
+                'outstanding_skills' => $record->outstanding_skills,
+                'nutritional_problems' => $record->nutritional_problems,
             ];
         });
     }
@@ -84,6 +86,8 @@ final class ChildListTransformer extends ParentTransformer
         return $this->item($child->socialRecord, function ($record) {
             return [
                 'guardian_type' => $record->guardian_type,
+                'incident_history' => $record->incident_history,
+                'pets' => $record->pets,
                 'family_members_count' => $record->relationLoaded('familyMembers') ? $record->familyMembers->count() : 0,
             ];
         });

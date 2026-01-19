@@ -5,8 +5,12 @@ namespace App\Containers\Monitoring\Child\UI\API\Requests;
 use App\Containers\AppSection\User\Enums\Gender;
 use App\Containers\Monitoring\Child\Enums\DeficitLevel;
 use App\Containers\Monitoring\Child\Enums\GuardianType;
+use App\Containers\Monitoring\Child\Enums\HousingFinish;
+use App\Containers\Monitoring\Child\Enums\HousingFloorMaterial;
 use App\Containers\Monitoring\Child\Enums\HousingTenure;
 use App\Containers\Monitoring\Child\Enums\HousingType;
+use App\Containers\Monitoring\Child\Enums\HousingWallMaterial;
+use App\Containers\Monitoring\Child\Enums\HousingUtility;
 use App\Containers\Monitoring\Child\Enums\Kinship;
 use App\Containers\Monitoring\Child\Enums\MaritalStatus;
 use App\Containers\Monitoring\Child\Enums\TransportType;
@@ -35,6 +39,7 @@ final class CreateChildRequest extends ParentRequest
             'gender' => Rule::enum(Gender::class),
             'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
+            'municipality' => 'string|max:255|nullable',
             'address' => 'required|string|max:255',
             'avatar' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
             'avatar.*' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
@@ -61,16 +66,18 @@ final class CreateChildRequest extends ParentRequest
             'guardian_type' => Rule::enum(GuardianType::class),
             'housing_type' => Rule::enum(HousingType::class),
             'housing_tenure' => Rule::enum(HousingTenure::class),
-            'housing_wall_material' => 'string|max:255|nullable',
-            'housing_floor_material' => 'string|max:255|nullable',
-            'housing_finish' => 'string|max:255|nullable',
-            'housing_bedrooms' => 'integer|min:0|max:10',
+            'housing_wall_material' => Rule::enum(HousingWallMaterial::class),
+            'housing_floor_material' => Rule::enum(HousingFloorMaterial::class),
+            'housing_finish' => Rule::enum(HousingFinish::class),
+            'housing_bedrooms' => 'nullable|integer|min:0|max:10',
             'housing_rooms' => 'array|nullable',
             'housing_rooms.*' => 'string|max:255',
             'housing_utilities' => 'array|nullable',
-            'housing_utilities.*' => 'string|max:255',
+            'housing_utilities.*' => [Rule::enum(HousingUtility::class)],
             'transport_type' => Rule::enum(TransportType::class),
             'travel_time' => Rule::enum(TravelTime::class),
+            'incident_history' => 'string|max:1000|nullable',
+            'pets' => 'string|max:500|nullable',
  
             'family_members' => 'array|nullable',
             'family_members.*.first_name' => 'required|string|max:255',

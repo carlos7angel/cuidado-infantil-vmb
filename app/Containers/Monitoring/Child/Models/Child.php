@@ -32,6 +32,7 @@ final class Child extends ParentModel
         'country',
         'state',
         'city',
+        'municipality',
         'address',
     ];
 

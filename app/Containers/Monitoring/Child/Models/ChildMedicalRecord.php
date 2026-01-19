@@ -40,6 +40,8 @@ final class ChildMedicalRecord extends ParentModel
         // Documentos
         'medical_report_document',
         'diagnosis_document',
+        'outstanding_skills',
+        'nutritional_problems',
         // Otros
         'other_observations',
     ];
