@@ -60,22 +60,21 @@ final class CreateActivityLogTask extends ParentTask
             }
 
             $properties = $data;
-
-            // Agregar propiedades adicionales del request
+            
+            $activity = activity($log)
+            ->causedBy($causer)
+            ->performedOn($subject)
+            ->withProperties($properties)
+            ->log($message);
+            
             if (isset($request['HTTP_USER_AGENT'])) {
-                $properties['userAgent'] = $request['HTTP_USER_AGENT'];
+                $activity->user_agent = $request['HTTP_USER_AGENT'];
             }
             if (isset($request['REMOTE_ADDR'])) {
-                $properties['ipAddress'] = $request['REMOTE_ADDR'];
+                $activity->ip_address = $request['REMOTE_ADDR'];
             }
-
-            $activity = activity($log)
-                ->causedBy($causer)
-                ->performedOn($subject)
-                ->withProperties($properties)
-                ->log($message);
-
-            // Retornar el modelo de actividad creado por Spatie
+            $activity->save();
+            
             return $activity;
         } catch (\Exception $e) {
             throw new \Exception('Error al crear el registro de actividad: ' . $e->getMessage());

@@ -78,7 +78,7 @@
                                 <a href="{{ route('admin.user.list_admin') }}" class="menu-link"><span class="menu-title">Usuarios administradores</span></a>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link" href=""><span class="menu-title">Logs de Auditoría</span></a>
+                                <a class="menu-link" href="{{ route('admin.activity_log.manage') }}"><span class="menu-title">Logs de Auditoría</span></a>
                             </div>
                         </div>
                     </div>
