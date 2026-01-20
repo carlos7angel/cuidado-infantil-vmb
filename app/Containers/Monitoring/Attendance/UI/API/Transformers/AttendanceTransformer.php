@@ -4,6 +4,7 @@ namespace App\Containers\Monitoring\Attendance\UI\API\Transformers;
 
 use App\Containers\Monitoring\Attendance\Models\Attendance;
 use App\Ship\Parents\Transformers\Transformer as ParentTransformer;
+use Vinkla\Hashids\Facades\Hashids;
 
 final class AttendanceTransformer extends ParentTransformer
 {
@@ -16,8 +17,8 @@ final class AttendanceTransformer extends ParentTransformer
         return [
             'type' => $attendance->getResourceKey(),
             'id' => $attendance->getHashedKey(),
-            'child_id' => $attendance->child_id,
-            'childcare_center_id' => $attendance->childcare_center_id,
+            'child_id' => Hashids::encode($attendance->child_id),
+            'childcare_center_id' => Hashids::encode($attendance->childcare_center_id),
             'date' => $attendance->date,
             'status' => $attendance->status?->value,
             'check_in_time' => $attendance->check_in_time?->format('H:i'),
