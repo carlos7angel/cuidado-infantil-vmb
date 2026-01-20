@@ -7,7 +7,6 @@ var KTListNutritionAssessments = function () {
     var initTable = function () {
        
         datatable = $(table).DataTable({
-            // responsive: true,
             dom:
                 "<'row mb-2'" +
                 "<'col-sm-6 d-flex align-items-center justify-content-start dt-toolbar'l>" +

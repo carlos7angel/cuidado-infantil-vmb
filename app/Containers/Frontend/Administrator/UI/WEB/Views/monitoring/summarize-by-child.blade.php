@@ -443,7 +443,6 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('themes/admin/js/custom/monitoring/summarize-by-child.js') }}"></script>
     <script>
         function showExportLoader(button) {
             const spinner = document.getElementById('export-spinner');
