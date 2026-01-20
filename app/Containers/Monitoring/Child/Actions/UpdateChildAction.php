@@ -19,6 +19,7 @@ use App\Containers\Monitoring\ChildEnrollment\Tasks\UpdateChildEnrollmentTask;
 use App\Ship\Parents\Actions\Action as ParentAction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 final class UpdateChildAction extends ParentAction
 {
@@ -325,7 +326,8 @@ final class UpdateChildAction extends ParentAction
 
         if ($file && $file->isValid()) {
             try {
-                $path = $this->processChildAvatarTask->run($file, $child->avatar);
+                $fileNamePrefix = Str::slug($child->full_name);
+                $path = $this->processChildAvatarTask->run($file, $child->avatar, $fileNamePrefix);
                 $child->avatar = $path;
                 $child->save();
             } catch (\Exception $e) {

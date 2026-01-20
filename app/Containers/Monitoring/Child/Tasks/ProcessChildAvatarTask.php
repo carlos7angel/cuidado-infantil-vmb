@@ -7,7 +7,7 @@ use Illuminate\Http\UploadedFile;
 
 final class ProcessChildAvatarTask extends ParentTask
 {
-    public function run(UploadedFile $file, ?string $existingAvatarPath = null): string
+    public function run(UploadedFile $file, ?string $existingAvatarPath = null, ?string $fileNamePrefix = null): string
     {
         $realPath = $file->getRealPath();
         if (!$realPath) {
@@ -76,8 +76,13 @@ final class ProcessChildAvatarTask extends ParentTask
             mkdir($uploadPath, 0755, true);
         }
 
-        $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', (string) $baseName) ?: 'avatar';
+        if ($fileNamePrefix) {
+            $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', $fileNamePrefix);
+        } else {
+            $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', (string) $baseName) ?: 'avatar';
+        }
+        
         $fileName = time() . '_' . $safeBaseName . '.' . $extension;
         $destinationPath = $uploadPath . DIRECTORY_SEPARATOR . $fileName;
 

@@ -49,16 +49,18 @@
                         <div class="d-flex flex-center flex-column py-5">
                             <div class="symbol symbol-100px symbol-circle mb-7">
                                 @php
-                                    $imageName = 'user_blank.png';
-                                    if ($child->gender) {
+                                    $imageSrc = asset('/themes/common/media/images/user_blank.png');
+                                    if ($child->avatar) {
+                                        $imageSrc = asset($child->avatar);
+                                    } elseif ($child->gender) {
                                         if ($child->gender === \App\Containers\AppSection\User\Enums\Gender::MALE) {
-                                            $imageName = 'boy_1.png';
+                                            $imageSrc = asset('/themes/common/media/images/boy_1.png');
                                         } elseif ($child->gender === \App\Containers\AppSection\User\Enums\Gender::FEMALE) {
-                                            $imageName = 'girl_1.png';
+                                            $imageSrc = asset('/themes/common/media/images/girl_1.png');
                                         }
                                     }
                                 @endphp
-                                <img src="{{ asset('/themes/common/media/images/' . $imageName) }}" alt="image" />
+                                <img src="{{ $imageSrc }}" alt="image" style="object-fit: cover;" />
                             </div>
                             <a href="#" class="fs-3 text-gray-800 text-center fw-bold mb-3">{{ $child->full_name }}</a>
                             <div class="fs-5 fw-bold text-muted mb-6">

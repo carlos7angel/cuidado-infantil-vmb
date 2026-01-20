@@ -19,6 +19,7 @@ use App\Containers\Monitoring\ChildEnrollment\Models\ChildEnrollment;
 use App\Containers\Monitoring\Child\UI\API\Requests\CreateChildRequest;
 use App\Ship\Parents\Actions\Action as ParentAction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 final class CreateChildAction extends ParentAction
 {
@@ -229,7 +230,8 @@ final class CreateChildAction extends ParentAction
         }
 
         if ($file && $file->isValid()) {
-            $path = $this->processChildAvatarTask->run($file, $child->avatar);
+            $fileNamePrefix = Str::slug($child->full_name);
+            $path = $this->processChildAvatarTask->run($file, $child->avatar, $fileNamePrefix);
             $child->avatar = $path;
             $child->save();
         }
