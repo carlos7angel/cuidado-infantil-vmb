@@ -80,6 +80,9 @@
                             <div class="menu-item">
                                 <a class="menu-link" href="{{ route('admin.activity_log.manage') }}"><span class="menu-title">Logs de Auditoría</span></a>
                             </div>
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('admin.child.import.form') }}"><span class="menu-title">Importar Infantes</span></a>
+                            </div>
                         </div>
                     </div>
                     
