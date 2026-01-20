@@ -10,6 +10,9 @@ final class ListChildrenRequest extends ParentRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'limit' => 'integer|min:1',
+            'page' => 'integer|min:1',
+        ];
     }
 }
