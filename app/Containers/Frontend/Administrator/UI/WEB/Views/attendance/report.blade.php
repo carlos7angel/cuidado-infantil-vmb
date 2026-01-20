@@ -197,7 +197,6 @@
 @endsection
 
 @section('styles')
-    <link href="{{ asset('themes/common/plugins/custom/daterangepicker/daterangepicker.css') }}" rel="stylesheet" type="text/css" />
     <style>
         .attendance-report-table-wrapper {
             overflow-x: auto;
@@ -252,8 +251,6 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('themes/common/plugins/custom/daterangepicker/daterangepicker.bundle.js') }}"></script>
-    <script src="{{ asset('themes/common/plugins/custom/moment/moment.min.js') }}"></script>
     <script src="{{ asset('themes/admin/js/custom/attendance/report.js') }}"></script>
 @endsection
 

@@ -18,7 +18,6 @@
     <link href="{{ asset('themes/common/css/style.font.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('themes/common/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('themes/admin/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('themes/admin/css/style.external.css') }}" rel="stylesheet" type="text/css" />
     @yield('styles')
 
     <script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
