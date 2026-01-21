@@ -5,9 +5,11 @@ namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator;
 use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
-final class GetEducatorsJsonDataTableRequest extends ParentRequest
+final class GenerateEducatorsReportRequest extends ParentRequest
 {
     protected array $decode = [];
+
+    protected array $urlParameters = [];
 
     public function rules(): array
     {

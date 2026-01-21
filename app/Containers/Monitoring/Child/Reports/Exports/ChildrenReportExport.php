@@ -16,14 +16,20 @@ class ChildrenReportExport implements FromArray, WithTitle, WithEvents
 {
     protected $enrollments;
 
-    public function __construct()
+    public function __construct($childcareCenterId = null)
     {
-        $this->enrollments = ChildEnrollment::with([
+        $query = ChildEnrollment::with([
             'child.medicalRecord',
             'child.socialRecord',
             'childcareCenter',
             'room',
-        ])->orderByDesc('enrollment_date')->get();
+        ])->orderByDesc('enrollment_date');
+
+        if ($childcareCenterId) {
+            $query->where('childcare_center_id', $childcareCenterId);
+        }
+
+        $this->enrollments = $query->get();
     }
 
     public function array(): array

@@ -2,6 +2,7 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\ChildcareCenter;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
 final class StoreChildcareCenterRequest extends ParentRequest
@@ -44,7 +45,7 @@ final class StoreChildcareCenterRequest extends ParentRequest
 
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->hasAnyRole([Role::SUPER_ADMIN, Role::MUNICIPAL_ADMIN]);
     }
 }
 

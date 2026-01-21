@@ -2,11 +2,13 @@
 
 namespace App\Containers\Monitoring\Educator\Tasks;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\GetEducatorsJsonDataTableRequest;
 use App\Containers\Monitoring\Educator\Data\Repositories\EducatorRepository;
 use App\Ship\Criteria\OrderByFieldCriteria;
 use App\Ship\Criteria\SkipTakeCriteria;
 use App\Ship\Parents\Tasks\Task as ParentTask;
+use Illuminate\Support\Facades\Auth;
 
 final class GetEducatorsJsonDataTableTask extends ParentTask
 {
@@ -40,14 +42,30 @@ final class GetEducatorsJsonDataTableTask extends ParentTask
         $searchFieldState = $requestData['columns'][3]['search']['value'] ?? '';
 
         // Get total count before any filtering (recordsTotal)
-        $recordsTotal = $this->repository->count();
+        /** @var User $user */
+        $user = Auth::user();
+        
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $recordsTotal = $this->repository->whereHas('childcareCenters', function ($q) use ($user) {
+                $q->where('childcare_centers.id', $user->childcare_center_id);
+            })->count();
+        } else {
+            $recordsTotal = $this->repository->count();
+        }
 
         $result = $this->repository->scopeQuery(function ($query) use (
             $searchValue,
             $searchFieldName,
             $searchFieldEmail,
             $searchFieldState,
+            $user,
         ) {
+            if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+                $query = $query->whereHas('childcareCenters', function ($q) use ($user) {
+                    $q->where('childcare_centers.id', $user->childcare_center_id);
+                });
+            }
+
             // Filter by name
             if (!empty($searchFieldName)) {
                 $query = $query->where(function ($q) use ($searchFieldName) {

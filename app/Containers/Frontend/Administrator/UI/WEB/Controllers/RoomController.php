@@ -2,8 +2,10 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Room\FormRoomRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Room\GetRoomsJsonDataTableRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Room\ManageRoomsRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Room\StoreRoomRequest;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
 use App\Containers\Monitoring\Room\Actions\CreateRoomWebAction;
@@ -13,13 +15,21 @@ use App\Containers\Monitoring\Room\Models\Room;
 use App\Containers\Monitoring\Room\Tasks\FindRoomByIdTask;
 use App\Ship\Parents\Controllers\WebController;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 final class RoomController extends WebController
 {
-    public function manage(): View
+    public function manage(ManageRoomsRequest $request): View
     {
         $page_title = 'Gestión de Grupos/Salas';
-        $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcare_centers = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        }
 
         return view('frontend@administrator::room.manage', compact('page_title', 'childcare_centers'));
     }
@@ -38,7 +48,14 @@ final class RoomController extends WebController
     {
         $page_title = "Nuevo Grupo/Sala";
         $room = new Room();
-        $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcare_centers = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        }
 
         return view('frontend@administrator::room.form', compact('page_title', 'room', 'childcare_centers'));
     }
@@ -47,7 +64,14 @@ final class RoomController extends WebController
     {
         $page_title = "Editar Grupo/Sala";
         $room = app(FindRoomByIdTask::class)->run($request->id);
-        $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcare_centers = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        }
 
         return view('frontend@administrator::room.form', compact('page_title', 'room', 'childcare_centers'));
     }

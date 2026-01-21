@@ -2,11 +2,14 @@
 
 namespace App\Containers\Monitoring\Room\Tasks;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Room\GetRoomsJsonDataTableRequest;
 use App\Containers\Monitoring\Room\Data\Repositories\RoomRepository;
 use App\Ship\Criteria\OrderByFieldCriteria;
 use App\Ship\Criteria\SkipTakeCriteria;
 use App\Ship\Parents\Tasks\Task as ParentTask;
+use Illuminate\Support\Facades\Auth;
 
 final class GetRoomsJsonDataTableTask extends ParentTask
 {
@@ -40,14 +43,25 @@ final class GetRoomsJsonDataTableTask extends ParentTask
         $searchFieldIsActive = $requestData['columns'][3]['search']['value'] ?? '';
 
         // Get total count before any filtering (recordsTotal)
-        $recordsTotal = $this->repository->count();
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $recordsTotal = $this->repository->where('childcare_center_id', $user->childcare_center_id)->count();
+        } else {
+            $recordsTotal = $this->repository->count();
+        }
 
         $result = $this->repository->scopeQuery(function ($query) use (
             $searchValue,
             $searchFieldName,
             $searchFieldChildcareCenter,
             $searchFieldIsActive,
+            $user,
         ) {
+            if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+                $query = $query->where('childcare_center_id', $user->childcare_center_id);
+            }
+
             // Filter by name
             if (!empty($searchFieldName)) {
                 $query = $query->where('name', 'like', '%'.$searchFieldName.'%');

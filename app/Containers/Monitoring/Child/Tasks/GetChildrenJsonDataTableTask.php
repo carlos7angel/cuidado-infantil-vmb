@@ -2,11 +2,13 @@
 
 namespace App\Containers\Monitoring\Child\Tasks;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\GetChildrenJsonDataTableRequest;
 use App\Containers\Monitoring\ChildEnrollment\Data\Repositories\ChildEnrollmentRepository;
 use App\Ship\Criteria\OrderByFieldCriteria;
 use App\Ship\Criteria\SkipTakeCriteria;
 use App\Ship\Parents\Tasks\Task as ParentTask;
+use Illuminate\Support\Facades\Auth;
 
 final class GetChildrenJsonDataTableTask extends ParentTask
 {
@@ -34,8 +36,16 @@ final class GetChildrenJsonDataTableTask extends ParentTask
         $pageSize = $length != null ? intval($length) : 10;
         $skip = $start != null ? intval($start) : 0;
 
-        // Filter by childcare center (from dropdown)
+        // Filter by childcare center (from dropdown or user role)
         $childcareCenterId = $request->input('childcare_center_id');
+        
+        // If user is childcare_admin, force scoping to their center
+        /** @var User $user */
+        $user =  Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcareCenterId = Auth::user()->childcare_center_id;
+        }
 
         // Advanced search fields from column search
         $searchFieldName = $requestData['columns'][1]['search']['value'] ?? '';

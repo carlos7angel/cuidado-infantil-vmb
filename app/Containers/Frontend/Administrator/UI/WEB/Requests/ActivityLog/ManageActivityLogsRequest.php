@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\User;
+namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\ActivityLog;
 
 use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
-final class EditUserRequest extends ParentRequest
+final class ManageActivityLogsRequest extends ParentRequest
 {
-    protected array $decode = [
-        // 'user_id',
-    ];
+    protected array $decode = [];
+
+    protected array $urlParameters = [];
 
     public function rules(): array
     {
-        return [
-            'user_id' => 'exists:users,id',
-        ];
+        return [];
     }
 
     public function authorize(): bool

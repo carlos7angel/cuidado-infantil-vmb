@@ -4,13 +4,14 @@ namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
 use App\Containers\AppSection\ActivityLog\Actions\GetActivityLogsJsonDataTableAction;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\ActivityLog\GetActivityLogsJsonDataTableRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\ActivityLog\ManageActivityLogsRequest;
 use App\Ship\Parents\Controllers\WebController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 
 final class ActivityLogController extends WebController
 {
-    public function manage(): View
+    public function manage(ManageActivityLogsRequest $request): View
     {
         $page_title = 'Logs de Auditoría';
 

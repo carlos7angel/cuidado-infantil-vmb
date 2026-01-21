@@ -29,9 +29,9 @@
             <span class="page-desc text-white opacity-50 fs-6 fw-bold pt-3">Por infante: {{ $child->full_name }}</span>
         </h1>
     </div>
-    <div class="d-flex gap-4 gap-lg-13">
+    <div class="d-flex">
         <a href="{{ route('admin.monitoring.summarize-by-child.export-excel', ['child_id' => $child->id]) }}" 
-           class="btn btn-primary" 
+           class="btn btn-success me-3" 
            id="btn-export-excel"
            onclick="showExportLoader(this)">
             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="export-spinner"></span>
@@ -465,7 +465,7 @@
                         text.textContent = 'Generar Reporte Excel';
                         button.disabled = false;
                     }
-                }, 30000); // Resetear después de 30 segundos si no se descargó
+                }, 10000); // Resetear después de 30 segundos si no se descargó
             }
         }
     </script>

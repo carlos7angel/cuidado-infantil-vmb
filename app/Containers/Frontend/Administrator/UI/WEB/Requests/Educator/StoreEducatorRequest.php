@@ -2,7 +2,9 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\AppSection\User\Enums\Gender;
+use App\Containers\Monitoring\Educator\Models\Educator;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,6 +15,13 @@ final class StoreEducatorRequest extends ParentRequest
     protected array $urlParameters = [
         'id',
     ];
+
+    protected function prepareForValidation()
+    {
+        if ($this->user()->hasRole(Role::CHILDCARE_ADMIN)) {
+            $this->merge(['childcare_center_ids' => [$this->user()->childcare_center_id]]);
+        }
+    }
 
     public function rules(): array
     {
@@ -44,7 +53,20 @@ final class StoreEducatorRequest extends ParentRequest
 
     public function authorize(): bool
     {
+        if (!$this->user()->hasAnyRole([Role::SUPER_ADMIN, Role::MUNICIPAL_ADMIN, Role::CHILDCARE_ADMIN])) {
+            return false;
+        }
+
+        if ($this->user()->hasRole(Role::CHILDCARE_ADMIN)) {
+             $id = $this->route('id') ?? $this->input('id');
+             if ($id) {
+                 $educator = Educator::with('childcareCenters')->find($id);
+                 if ($educator && !$educator->childcareCenters->contains('id', $this->user()->childcare_center_id)) {
+                     return false;
+                 }
+             }
+        }
+
         return true;
     }
 }
-

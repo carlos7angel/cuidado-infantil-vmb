@@ -2,11 +2,14 @@
 
 namespace App\Containers\Monitoring\IncidentReport\Tasks;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\GetIncidentsJsonDataTableRequest;
 use App\Containers\Monitoring\IncidentReport\Data\Repositories\IncidentReportRepository;
 use App\Ship\Criteria\OrderByFieldCriteria;
 use App\Ship\Criteria\SkipTakeCriteria;
 use App\Ship\Parents\Tasks\Task as ParentTask;
+use Illuminate\Support\Facades\Auth;
 
 final class GetIncidentsJsonDataTableTask extends ParentTask
 {
@@ -38,6 +41,15 @@ final class GetIncidentsJsonDataTableTask extends ParentTask
         $searchCode = $requestData['columns'][1]['search']['value'] ?? '';
         $searchChild = $requestData['columns'][2]['search']['value'] ?? '';
         $searchChildcareCenter = $requestData['columns'][3]['search']['value'] ?? '';
+        
+        // If user is childcare_admin, force scoping to their center
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $searchChildcareCenter = $user->childcare_center_id;
+        }
+
         $searchRoom = $request->input('kt_search_room') ?? '';
         $searchType = $requestData['columns'][4]['search']['value'] ?? '';
         $searchSeverity = $requestData['columns'][5]['search']['value'] ?? '';

@@ -5,16 +5,14 @@ namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\Attendance;
 use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
-final class GenerateAttendanceXlsReportRequest extends ParentRequest
+final class GetAttendanceReportRequest extends ParentRequest
 {
-    protected array $decode = [];
-
     public function rules(): array
     {
         return [
             'childcare_center_id' => 'nullable|exists:childcare_centers,id',
-            'start_date' => 'required|date_format:d/m/Y',
-            'end_date' => 'required|date_format:d/m/Y|after_or_equal:start_date',
+            'start_date' => 'nullable|date_format:d/m/Y',
+            'end_date' => 'nullable|date_format:d/m/Y|after_or_equal:start_date',
             'report_type' => 'nullable|in:complete,simplified',
         ];
     }
@@ -22,18 +20,20 @@ final class GenerateAttendanceXlsReportRequest extends ParentRequest
     public function authorize(): bool
     {
         $user = $this->user();
+        
+        if (!$user->hasAnyRole([Role::SUPER_ADMIN, Role::MUNICIPAL_ADMIN, Role::CHILDCARE_ADMIN])) {
+            return false;
+        }
+
+        // If user is childcare_admin, they can only request report for their center
         if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
             $requestedCenterId = $this->input('childcare_center_id');
-            // If ID is provided, it must match user's center
+            // If center ID is provided, it must match user's center
             if ($requestedCenterId && $requestedCenterId != $user->childcare_center_id) {
                 return false;
             }
-            // If ID is NOT provided, it depends on how the Action handles it. 
-            // Usually we want to ensure they can't request "all".
-            // But if the Action defaults to "my center" for this role, it's fine.
-            // Let's assume strict check: if they request null, maybe it's invalid?
-            // But validation says nullable.
         }
+
         return true;
     }
 
@@ -41,7 +41,6 @@ final class GenerateAttendanceXlsReportRequest extends ParentRequest
     {
         $user = $this->user();
         if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
-            // Force the center ID to be the user's center
             $this->merge([
                 'childcare_center_id' => $user->childcare_center_id,
             ]);

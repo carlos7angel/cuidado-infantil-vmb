@@ -2,6 +2,8 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Attendance\GetAttendanceReportRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Attendance\GenerateAttendanceXlsReportRequest;
 use App\Containers\Monitoring\Attendance\Actions\GenerateAttendanceXlsReportAction;
 use App\Containers\Monitoring\Attendance\Tasks\GetAttendanceReportTask;
@@ -11,14 +13,22 @@ use Carbon\Carbon;
 use Http\Discovery\Exception\NotFoundException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use App\Containers\AppSection\User\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 final class AttendanceController extends WebController
 {
-    public function report(Request $request): View|RedirectResponse
+    public function report(GetAttendanceReportRequest $request): View|RedirectResponse
     {
         $page_title = 'Reporte de Asistencia';
-        $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcare_centers = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        }
         
         // Set default dates: current week (Monday to Sunday)
         $now = Carbon::now();
@@ -31,6 +41,12 @@ final class AttendanceController extends WebController
         // Usar fechas de la request si existen, sino usar las por defecto
         $startDate = $request->input('start_date', $defaultStartDate);
         $endDate = $request->input('end_date', $defaultEndDate);
+        
+        // Merge defaults into request so Task can use them
+        $request->merge([
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+        ]);
         
         $reportData = null;
         
@@ -49,43 +65,10 @@ final class AttendanceController extends WebController
         
         // Generar reporte automáticamente (siempre que no sea acción de descarga)
         try {
-            // Crear datos de validación usando fechas de request o defaults
-            $requestData = [
-                'childcare_center_id' => $request->input('childcare_center_id'),
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'report_type' => $request->input('report_type', 'complete'),
-            ];
+            // El request ya valida y autoriza
+            // También hace merge del childcare_center_id si es childcare_admin
             
-            // Validate the request
-            $validatedData = validator($requestData, [
-                'childcare_center_id' => 'nullable|exists:childcare_centers,id',
-                'start_date' => 'required|date_format:d/m/Y',
-                'end_date' => 'required|date_format:d/m/Y|after_or_equal:start_date',
-                'report_type' => 'nullable|in:complete,simplified',
-            ])->validate();
-            
-            // Create a request-like object for the task
-            $reportRequest = new class($validatedData) {
-                private $data;
-                
-                public function __construct($data) {
-                    $this->data = $data;
-                }
-                
-                public function input($key = null, $default = null) {
-                    if ($key === null) {
-                        return $this->data;
-                    }
-                    return $this->data[$key] ?? $default;
-                }
-            };
-            
-            $reportData = app(GetAttendanceReportTask::class)->run($reportRequest);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Return back with validation errors
-            return view('frontend@administrator::attendance.report', compact('page_title', 'childcare_centers', 'reportData', 'defaultStartDate', 'defaultEndDate'))
-                ->with('errors', $e->errors());
+            $reportData = app(GetAttendanceReportTask::class)->run($request);
         } catch (\Exception $e) {
             // Handle other exceptions silently, no report will be shown
             $reportData = null;

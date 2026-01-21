@@ -59,7 +59,7 @@ final class UpdateAdminUserAction extends ParentAction
         // Update role if changed (only for full updates)
         if (isset($data['user_role']) && $data['user_role'] !== null) {
             $user->syncRoles([]); // Remove all existing roles
-            $role = $data['user_role'] === 'municipal_admin' ? Role::MUNICIPAL_ADMIN : Role::CHILDCARE_ADMIN;
+            $role = $data['user_role'] === Role::MUNICIPAL_ADMIN ? Role::MUNICIPAL_ADMIN : Role::CHILDCARE_ADMIN;
             $user->assignRole($role);
         }
 

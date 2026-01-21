@@ -5,10 +5,8 @@ namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\ChildcareCenter;
 use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
-final class GetChildcareCentersJsonDataTableRequest extends ParentRequest
+final class ManageChildcareCentersRequest extends ParentRequest
 {
-    protected array $decode = [];
-
     public function rules(): array
     {
         return [];

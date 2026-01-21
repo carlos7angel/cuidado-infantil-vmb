@@ -2,9 +2,13 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\FormEducatorRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\GenerateEducatorsReportRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\GetEducatorsJsonDataTableRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\ManageEducatorsRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\StoreEducatorRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Educator\ToggleEducatorStatusRequest;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
 use App\Containers\Monitoring\Educator\Actions\CreateEducatorWebAction;
 use App\Containers\Monitoring\Educator\Actions\GenerateEducatorsReportAction;
@@ -15,6 +19,7 @@ use App\Containers\Monitoring\Educator\Tasks\FindEducatorByIdTask;
 use App\Ship\Parents\Controllers\WebController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 final class EducatorController extends WebController
 {
@@ -39,7 +44,14 @@ final class EducatorController extends WebController
     {
         $page_title = "Nuevo Educador";
         $educator = new Educator();
-        $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcare_centers = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        }
 
         return view('frontend@administrator::educator.form', compact('page_title', 'educator', 'childcare_centers'));
     }
@@ -49,7 +61,14 @@ final class EducatorController extends WebController
         $page_title = "Editar Educador";
         $educator = app(FindEducatorByIdTask::class)->run($request->id);
         $educator->load('childcareCenters', 'user');
-        $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcare_centers = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        }
 
         return view('frontend@administrator::educator.form', compact('page_title', 'educator', 'childcare_centers'));
     }
@@ -87,7 +106,7 @@ final class EducatorController extends WebController
         }
     }
 
-    public function generateEducatorsReport()
+    public function generateEducatorsReport(GenerateEducatorsReportRequest $request)
     {
         try {
             return app(GenerateEducatorsReportAction::class)->run();
@@ -96,10 +115,10 @@ final class EducatorController extends WebController
         }
     }
 
-    public function toggleStatus(int $id): JsonResponse
+    public function toggleStatus(ToggleEducatorStatusRequest $request, int $id): JsonResponse
     {
         try {
-            $educator = Educator::with('user')->findOrFail($id);
+            $educator = Educator::with(['user'])->findOrFail($id);
 
             if (!$educator->user) {
                 return response()->json([

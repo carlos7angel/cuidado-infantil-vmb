@@ -3,22 +3,18 @@
 namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\Child;
 
 use App\Containers\AppSection\Authorization\Enums\Role;
-use App\Ship\Parents\Requests\Request;
+use App\Ship\Parents\Requests\Request as ParentRequest;
 
-class PreviewChildrenImportRequest extends Request
+final class GenerateChildrenReportRequest extends ParentRequest
 {
     public function rules(): array
     {
-        return [
-            'file' => 'required|file|mimes:xlsx,xls,csv|max:10240', // 10MB max
-        ];
+        return [];
     }
 
     public function authorize(): bool
     {
-        $user = $this->user();
-        
-        return $user->hasAnyRole([
+        return $this->user()->hasAnyRole([
             Role::SUPER_ADMIN,
             Role::MUNICIPAL_ADMIN,
             Role::CHILDCARE_ADMIN,

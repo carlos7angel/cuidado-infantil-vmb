@@ -2,7 +2,9 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\GetChildrenJsonDataTableRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\GenerateChildrenReportRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\ShowChildRequest;
 use App\Containers\Monitoring\Child\Actions\GenerateChildrenReportAction;
 use App\Containers\Monitoring\Child\Actions\GetChildrenJsonDataTableAction;
@@ -10,13 +12,21 @@ use App\Containers\Monitoring\Child\Tasks\FindChildByIdTask;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
 use App\Ship\Parents\Controllers\WebController;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 final class ChildController extends WebController
 {
     public function manage(): View
     {
         $page_title = 'Gestión de Infantes Inscritos';
-        $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcare_centers = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcare_centers = ChildcareCenter::orderBy('name')->get();
+        }
 
         return view('frontend@administrator::child.manage', compact('page_title', 'childcare_centers'));
     }
@@ -36,12 +46,23 @@ final class ChildController extends WebController
         $page_title = 'Detalle del Infante';
         $child = app(FindChildByIdTask::class)->run($request->id);
         
+        /** @var User $user */
+        $user = Auth::user();
+
         // Load all related data
         $child->load([
             'medicalRecord',
             'socialRecord.familyMembers',
-            'enrollments' => function ($query) {
+            'enrollments' => function ($query) use ($user) {
                 $query->with(['childcareCenter', 'room'])->orderBy('created_at', 'desc');
+                if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+                    $query->where('childcare_center_id', $user->childcare_center_id);
+                }
+            },
+            'activeEnrollment' => function ($query) use ($user) {
+                if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+                    $query->where('childcare_center_id', $user->childcare_center_id);
+                }
             },
             'activeEnrollment.childcareCenter',
             'activeEnrollment.room',
@@ -60,7 +81,7 @@ final class ChildController extends WebController
         return view('frontend@administrator::child.show', compact('page_title', 'child'));
     }
 
-    public function generateChildrenReport()
+    public function generateChildrenReport(GenerateChildrenReportRequest $request)
     {
         try {
             return app(GenerateChildrenReportAction::class)->run();

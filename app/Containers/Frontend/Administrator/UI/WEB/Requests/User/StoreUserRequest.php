@@ -2,6 +2,7 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\User;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +25,7 @@ final class StoreUserRequest extends ParentRequest
         ];
 
         // If childcare_admin role is selected, childcare_center_id is required
-        if ($this->input('user_role') === 'childcare_admin') {
+        if ($this->input('user_role') === Role::CHILDCARE_ADMIN) {
             $rules['childcare_center_id'] = 'required|exists:childcare_centers,id';
         }
 
@@ -33,7 +34,7 @@ final class StoreUserRequest extends ParentRequest
 
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->hasRole(Role::SUPER_ADMIN);
     }
 
     public function messages(): array

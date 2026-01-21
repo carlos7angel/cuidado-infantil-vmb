@@ -2,6 +2,7 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Monitoring\Attendance\Models\Attendance;
 use App\Containers\Monitoring\Child\Models\Child;
 use App\Containers\Monitoring\ChildDevelopment\Models\ChildDevelopmentEvaluation;
@@ -24,7 +25,7 @@ final class DashboardController extends WebController
         $user = Auth::user();
 
         // Obtener estadísticas optimizadas usando consultas agregadas
-        $stats = $this->getDashboardStatistics();
+        $stats = $this->getDashboardStatistics($user);
 
         // Generar saludo personalizado
         $greeting = $this->getGreeting($user->name ?? 'Usuario');
@@ -35,52 +36,76 @@ final class DashboardController extends WebController
     /**
      * Obtener estadísticas del dashboard de forma optimizada.
      */
-    private function getDashboardStatistics(): array
+    private function getDashboardStatistics($user): array
     {
         $today = now()->startOfDay();
         $thisMonth = now()->startOfMonth();
         $lastMonth = now()->subMonth()->startOfMonth();
 
+        $isChildcareAdmin = $user->hasRole(Role::CHILDCARE_ADMIN);
+        $centerId = $user->childcare_center_id;
+
+        // Helper queries based on role
+        $childQuery = Child::query();
+        $centerQuery = ChildcareCenter::query();
+        $enrollmentQuery = ChildEnrollment::query();
+        $attendanceQuery = Attendance::query();
+        $nutritionQuery = NutritionalAssessment::query();
+        $developmentQuery = ChildDevelopmentEvaluation::query();
+        $incidentQuery = IncidentReport::query();
+        $vaccinationQuery = ChildVaccination::query();
+        
+        if ($isChildcareAdmin) {
+            $childQuery->whereHas('activeEnrollment', fn($q) => $q->where('childcare_center_id', $centerId));
+            $centerQuery->where('id', $centerId);
+            $enrollmentQuery->where('childcare_center_id', $centerId);
+            $attendanceQuery->whereHas('child.activeEnrollment', fn($q) => $q->where('childcare_center_id', $centerId));
+            $nutritionQuery->whereHas('child.activeEnrollment', fn($q) => $q->where('childcare_center_id', $centerId));
+            $developmentQuery->whereHas('child.activeEnrollment', fn($q) => $q->where('childcare_center_id', $centerId));
+            $incidentQuery->where('childcare_center_id', $centerId);
+            $vaccinationQuery->whereHas('child.activeEnrollment', fn($q) => $q->where('childcare_center_id', $centerId));
+        }
+
         return [
             // Estadísticas principales
-            'total_children' => Child::count(),
-            'total_centers' => ChildcareCenter::count(),
-            'active_enrollments' => ChildEnrollment::where('status', EnrollmentStatus::ACTIVE->value)->count(),
+            'total_children' => $childQuery->count(),
+            'total_centers' => $centerQuery->count(),
+            'active_enrollments' => $enrollmentQuery->where('status', EnrollmentStatus::ACTIVE->value)->count(),
             
             // Asistencias
-            'today_attendances' => Attendance::whereDate('date', $today)->count(),
-            'today_present' => Attendance::whereDate('date', $today)
+            'today_attendances' => (clone $attendanceQuery)->whereDate('date', $today)->count(),
+            'today_present' => (clone $attendanceQuery)->whereDate('date', $today)
                 ->where('status', 'presente')
                 ->count(),
-            'attendance_rate' => $this->calculateAttendanceRate(),
+            'attendance_rate' => $this->calculateAttendanceRate($user),
             
             // Evaluaciones
-            'total_nutritional_assessments' => NutritionalAssessment::count(),
-            'recent_nutritional_assessments' => NutritionalAssessment::where('assessment_date', '>=', $thisMonth)->count(),
-            'total_development_evaluations' => ChildDevelopmentEvaluation::count(),
-            'recent_development_evaluations' => ChildDevelopmentEvaluation::where('evaluation_date', '>=', $thisMonth)->count(),
+            'total_nutritional_assessments' => $nutritionQuery->count(),
+            'recent_nutritional_assessments' => (clone $nutritionQuery)->where('assessment_date', '>=', $thisMonth)->count(),
+            'total_development_evaluations' => $developmentQuery->count(),
+            'recent_development_evaluations' => (clone $developmentQuery)->where('evaluation_date', '>=', $thisMonth)->count(),
             
             // Reportes de incidentes
-            'total_incidents' => IncidentReport::count(),
-            'active_incidents' => IncidentReport::whereIn('status', [
+            'total_incidents' => $incidentQuery->count(),
+            'active_incidents' => (clone $incidentQuery)->whereIn('status', [
                 IncidentStatus::REPORTED->value,
                 IncidentStatus::UNDER_REVIEW->value,
                 IncidentStatus::ESCALATED->value,
             ])->count(),
-            'recent_incidents' => IncidentReport::where('reported_at', '>=', $thisMonth)->count(),
+            'recent_incidents' => (clone $incidentQuery)->where('reported_at', '>=', $thisMonth)->count(),
             
             // Vacunaciones
-            'total_vaccinations' => ChildVaccination::count(),
-            'recent_vaccinations' => ChildVaccination::where('date_applied', '>=', $thisMonth)->count(),
+            'total_vaccinations' => $vaccinationQuery->count(),
+            'recent_vaccinations' => (clone $vaccinationQuery)->where('date_applied', '>=', $thisMonth)->count(),
             
             // Estadísticas de crecimiento (último mes vs mes anterior)
             'children_growth' => $this->calculateGrowth(
-                Child::where('created_at', '<', $lastMonth)->count(),
-                Child::where('created_at', '<', $thisMonth)->count()
+                (clone $childQuery)->where('created_at', '<', $lastMonth)->count(),
+                (clone $childQuery)->where('created_at', '<', $thisMonth)->count()
             ),
             'enrollments_growth' => $this->calculateGrowth(
-                ChildEnrollment::where('created_at', '<', $lastMonth)->count(),
-                ChildEnrollment::where('created_at', '<', $thisMonth)->count()
+                (clone $enrollmentQuery)->where('created_at', '<', $lastMonth)->count(),
+                (clone $enrollmentQuery)->where('created_at', '<', $thisMonth)->count()
             ),
         ];
     }
@@ -88,12 +113,17 @@ final class DashboardController extends WebController
     /**
      * Calcular tasa de asistencia del mes actual.
      */
-    private function calculateAttendanceRate(): float
+    private function calculateAttendanceRate($user): float
     {
         $thisMonth = now()->startOfMonth();
         $totalDays = now()->day;
-        $expectedAttendances = ChildEnrollment::where('status', EnrollmentStatus::ACTIVE->value)
-            ->count() * $totalDays;
+        
+        $query = ChildEnrollment::where('status', EnrollmentStatus::ACTIVE->value);
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $query->where('childcare_center_id', $user->childcare_center_id);
+        }
+        
+        $expectedAttendances = $query->count() * $totalDays;
         
         if ($expectedAttendances === 0) {
             return 0;

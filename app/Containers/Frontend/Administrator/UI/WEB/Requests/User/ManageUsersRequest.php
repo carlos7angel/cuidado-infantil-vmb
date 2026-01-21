@@ -5,17 +5,15 @@ namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\User;
 use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
-final class EditUserRequest extends ParentRequest
+final class ManageUsersRequest extends ParentRequest
 {
-    protected array $decode = [
-        // 'user_id',
-    ];
+    protected array $decode = [];
+
+    protected array $urlParameters = [];
 
     public function rules(): array
     {
-        return [
-            'user_id' => 'exists:users,id',
-        ];
+        return [];
     }
 
     public function authorize(): bool

@@ -2,10 +2,13 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Monitoring\Child\Actions\ImportChildrenAction;
 use App\Containers\Monitoring\Child\Actions\PreviewChildrenImportAction;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\ImportChildrenRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\PreviewChildrenImportRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\ShowImportChildrenFormRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Child\GetRoomsByCenterRequest;
 use App\Containers\Monitoring\ChildcareCenter\Tasks\ListChildcareCentersTask;
 use App\Containers\Monitoring\Room\Tasks\ListRoomsByChildcareCenterTask;
 use App\Ship\Parents\Controllers\WebController;
@@ -15,16 +18,24 @@ use Illuminate\Http\Request;
 
 final class ImportChildrenController extends WebController
 {
-    public function showImportForm(): View
+    public function showImportForm(ShowImportChildrenFormRequest $request): View
     {
         $page_title = 'Importar Infantes';
-        $childcareCenters = app(ListChildcareCentersTask::class)->run();
+        
+        $user = $request->user();
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcareCenters = \App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter::where('id', $user->childcare_center_id)->get();
+        } else {
+            $childcareCenters = app(ListChildcareCentersTask::class)->run();
+        }
+        
         return view('frontend@administrator::child.import', compact('page_title', 'childcareCenters'));
     }
 
-    public function getRoomsByCenter(Request $request, $childcare_center_id): JsonResponse
+    public function getRoomsByCenter(GetRoomsByCenterRequest $request): JsonResponse
     {
         try {
+            $childcare_center_id = $request->route('childcare_center_id');
             $rooms = app(ListRoomsByChildcareCenterTask::class)->run($childcare_center_id);
             
             // Transform to simple array for frontend

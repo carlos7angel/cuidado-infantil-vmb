@@ -2,9 +2,11 @@
 
 namespace App\Containers\Monitoring\Attendance\Actions;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Attendance\GenerateAttendanceXlsReportRequest;
 use App\Containers\Monitoring\Attendance\Reports\Exports\AttendanceXlsReportExport;
 use App\Ship\Parents\Actions\Action as ParentAction;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,6 +24,14 @@ final class GenerateAttendanceXlsReportAction extends ParentAction
         $childcareCenterId = $request->input('childcare_center_id');
         $reportType = $request->input('report_type', 'complete');
         
+        // If user is childcare_admin, force scoping to their center
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcareCenterId = $user->childcare_center_id;
+        }
+
         $filename = 'Asistencia_' . Str::slug($startDate) . '_' . Str::slug($endDate) . '.xlsx';
         
         // Create a request-like object for the export

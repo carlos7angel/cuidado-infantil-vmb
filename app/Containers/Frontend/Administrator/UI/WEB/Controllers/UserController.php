@@ -6,11 +6,11 @@ use App\Containers\AppSection\User\Actions\CreateAdminUserAction;
 use App\Containers\AppSection\User\Actions\GetAdminUsersJsonDataTableAction;
 use App\Containers\AppSection\User\Actions\UpdateAdminUserAction;
 use App\Containers\AppSection\User\Tasks\FindUserByIdTask;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\ManageUsersRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\EditUserRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\ListAdminUsersJsonDataTableRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\UpdateUserInfoRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\UpdateUserPasswordRequest;
-use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\UpdateUserRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\ShowUserRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\User\StoreUserRequest;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
@@ -20,7 +20,7 @@ use Illuminate\Http\JsonResponse;
 
 final class UserController extends WebController
 {
-    public function listAdminUsers(): View
+    public function listAdminUsers(ManageUsersRequest $request): View
     {
         $page_title = 'Gestión de Usuarios Administradores';
         $childcare_centers = ChildcareCenter::orderBy('name')->get();

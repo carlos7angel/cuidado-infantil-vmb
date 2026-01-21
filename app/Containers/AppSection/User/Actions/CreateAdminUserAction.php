@@ -37,7 +37,7 @@ final class CreateAdminUserAction extends ParentAction
         ];
 
         // Add childcare_center_id only for childcare_admin role
-        if ($data['user_role'] === 'childcare_admin') {
+        if ($data['user_role'] === Role::CHILDCARE_ADMIN) {
             if (isset($data['childcare_center_id']) && !empty($data['childcare_center_id'])) {
                 $userData['childcare_center_id'] = $data['childcare_center_id'];
             } else {
@@ -49,7 +49,7 @@ final class CreateAdminUserAction extends ParentAction
         $user = $this->createUserTask->run($userData);
 
         // Assign role to user
-        $role = $data['user_role'] === 'municipal_admin' ? Role::MUNICIPAL_ADMIN : Role::CHILDCARE_ADMIN;
+        $role = $data['user_role'] === Role::MUNICIPAL_ADMIN ? Role::MUNICIPAL_ADMIN : Role::CHILDCARE_ADMIN;
         $user->assignRole($role);
 
         // Send email to admin (if enabled)
@@ -75,7 +75,7 @@ final class CreateAdminUserAction extends ParentAction
 
         // Only include childcare_center_id if it's not empty and role is childcare_admin
         $childcareCenterId = $request->input('childcare_center_id');
-        if (!empty($childcareCenterId) && $request->input('user_role') === 'childcare_admin') {
+        if (!empty($childcareCenterId) && $request->input('user_role') === Role::CHILDCARE_ADMIN) {
             $data['childcare_center_id'] = $childcareCenterId;
         }
 

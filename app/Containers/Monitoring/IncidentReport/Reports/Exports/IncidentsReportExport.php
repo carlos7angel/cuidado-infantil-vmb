@@ -16,14 +16,20 @@ class IncidentsReportExport implements FromArray, WithTitle, WithEvents
 {
     protected $incidents;
 
-    public function __construct()
+    public function __construct($childcareCenterId = null)
     {
-        $this->incidents = IncidentReport::with([
+        $query = IncidentReport::with([
             'child',
             'reportedBy',
             'childcareCenter',
             'room'
-        ])->orderBy('created_at', 'desc')->get();
+        ])->orderBy('created_at', 'desc');
+
+        if ($childcareCenterId) {
+            $query->where('childcare_center_id', $childcareCenterId);
+        }
+
+        $this->incidents = $query->get();
     }
 
     public function array(): array

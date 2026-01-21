@@ -2,9 +2,11 @@
 
 namespace App\Containers\Monitoring\Attendance\Tasks;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Monitoring\ChildEnrollment\Data\Repositories\ChildEnrollmentRepository;
 use App\Containers\Monitoring\ChildEnrollment\Enums\EnrollmentStatus;
 use App\Ship\Parents\Tasks\Task as ParentTask;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 final class GetAttendanceReportTask extends ParentTask
@@ -17,6 +19,14 @@ final class GetAttendanceReportTask extends ParentTask
     public function run(object $request): array
     {
         $childcareCenterId = $request->input('childcare_center_id');
+
+        // If user is childcare_admin, force scoping to their center
+        /** @var User $user */
+        $user =  Auth::user();    
+
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcareCenterId = $user->childcare_center_id;
+        }
         
         // Parse dates from d/m/Y to Y-m-d
         $startDate = Carbon::createFromFormat('d/m/Y', $request->input('start_date'));

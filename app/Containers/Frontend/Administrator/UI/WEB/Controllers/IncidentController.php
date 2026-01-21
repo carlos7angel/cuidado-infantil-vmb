@@ -2,7 +2,9 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\GetIncidentsJsonDataTableRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\GenerateIncidentsReportRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\ShowIncidentRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident\UpdateIncidentStatusRequest;
 use App\Containers\Monitoring\ChildcareCenter\Models\ChildcareCenter;
@@ -16,6 +18,7 @@ use App\Containers\Monitoring\Room\Models\Room;
 use App\Ship\Parents\Controllers\WebController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 final class IncidentController extends WebController
 {
@@ -23,9 +26,18 @@ final class IncidentController extends WebController
     {
         $page_title = 'Reportes de Incidentes';
 
+        /** @var User $user */
+        $user = Auth::user();
+
         // Get data for filters
-        $childcareCenters = ChildcareCenter::orderBy('name')->get();
-        $rooms = Room::with('childcareCenter')->orderBy('name')->get();
+        if ($user->hasRole(Role::CHILDCARE_ADMIN)) {
+            $childcareCenters = ChildcareCenter::where('id', $user->childcare_center_id)->get();
+            $rooms = Room::with('childcareCenter')->where('childcare_center_id', $user->childcare_center_id)->orderBy('name')->get();
+        } else {
+            $childcareCenters = ChildcareCenter::orderBy('name')->get();
+            $rooms = Room::with('childcareCenter')->orderBy('name')->get();
+        }
+
         $incidentTypes = IncidentType::cases();
         $incidentStatuses = IncidentStatus::cases();
 
@@ -89,7 +101,7 @@ final class IncidentController extends WebController
         }
     }
 
-    public function generateIncidentsReport()
+    public function generateIncidentsReport(GenerateIncidentsReportRequest $request)
     {
         try {
             return app(GenerateIncidentsReportAction::class)->run();

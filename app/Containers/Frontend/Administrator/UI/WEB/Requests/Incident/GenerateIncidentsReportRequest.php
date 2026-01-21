@@ -1,23 +1,15 @@
 <?php
 
-namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\ChildcareCenter;
+namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\Incident;
 
 use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
-final class FormChildcareCenterRequest extends ParentRequest
+final class GenerateIncidentsReportRequest extends ParentRequest
 {
-    protected array $decode = [];
-
-    protected array $urlParameters = [
-        'id',
-    ];
-
     public function rules(): array
     {
-        return [
-            'id' => 'sometimes|exists:childcare_centers,id',
-        ];
+        return [];
     }
 
     public function authorize(): bool
@@ -25,7 +17,7 @@ final class FormChildcareCenterRequest extends ParentRequest
         return $this->user()->hasAnyRole([
             Role::SUPER_ADMIN,
             Role::MUNICIPAL_ADMIN,
+            Role::CHILDCARE_ADMIN,
         ]);
     }
 }
-

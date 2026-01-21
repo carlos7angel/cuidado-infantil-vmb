@@ -16,13 +16,20 @@ class EducatorsReportExport implements FromArray, WithTitle, WithEvents
 {
     protected $educators;
 
-    public function __construct()
+    public function __construct($childcareCenterId = null)
     {
         // Load all educators with their relationships
-        $this->educators = Educator::with(['user', 'childcareCenters'])
+        $query = Educator::with(['user', 'childcareCenters'])
             ->orderBy('first_name')
-            ->orderBy('last_name')
-            ->get();
+            ->orderBy('last_name');
+
+        if ($childcareCenterId) {
+            $query->whereHas('childcareCenters', function ($q) use ($childcareCenterId) {
+                $q->where('childcare_centers.id', $childcareCenterId);
+            });
+        }
+
+        $this->educators = $query->get();
     }
 
     public function array(): array

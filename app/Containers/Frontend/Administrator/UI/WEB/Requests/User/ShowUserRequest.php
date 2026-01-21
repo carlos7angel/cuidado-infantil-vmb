@@ -2,6 +2,7 @@
 
 namespace App\Containers\Frontend\Administrator\UI\WEB\Requests\User;
 
+use App\Containers\AppSection\Authorization\Enums\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
 final class ShowUserRequest extends ParentRequest
@@ -19,7 +20,7 @@ final class ShowUserRequest extends ParentRequest
 
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->hasRole(Role::SUPER_ADMIN);
     }
 }
 

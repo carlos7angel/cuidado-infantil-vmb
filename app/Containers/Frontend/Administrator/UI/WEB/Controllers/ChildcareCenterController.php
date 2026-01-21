@@ -4,6 +4,7 @@ namespace App\Containers\Frontend\Administrator\UI\WEB\Controllers;
 
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\ChildcareCenter\FormChildcareCenterRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\ChildcareCenter\GetChildcareCentersJsonDataTableRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\ChildcareCenter\ManageChildcareCentersRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\ChildcareCenter\StoreChildcareCenterRequest;
 use App\Containers\Monitoring\ChildcareCenter\Actions\CreateChildcareCenterWebAction;
 use App\Containers\Monitoring\ChildcareCenter\Actions\GetChildcareCentersJsonDataTableAction;
@@ -15,7 +16,7 @@ use Illuminate\Contracts\View\View;
 
 final class ChildcareCenterController extends WebController
 {
-    public function manage(): View
+    public function manage(ManageChildcareCentersRequest $request): View
     {
         $page_title = 'Gestión de Centros Infantiles';
 

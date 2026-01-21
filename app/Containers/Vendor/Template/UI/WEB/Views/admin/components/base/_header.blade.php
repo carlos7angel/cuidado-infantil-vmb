@@ -27,11 +27,23 @@
                         </span>
                     </a>       
                     
-                    <a href="{{ route('admin.child.manage') }}" class="menu-item {{ in_array($page, ['']) ? 'here' : '' }} menu-lg-down-accordion me-0 me-lg-2">
+                    <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
+                         class="menu-item {{ in_array($page, ['child_manage', 'child_import']) ? 'here' : '' }} menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
                         <span class="menu-link">
                             <span class="menu-title">Gestión de Infantes</span>
+                            <span class="menu-arrow d-lg-none"></span>
                         </span>
-                    </a>
+                        <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown px-lg-2 py-lg-4 w-lg-200px">
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('admin.child.manage') }}"><span class="menu-title">Listado de Infantes</span></a>
+                            </div>
+                            @if(Auth::user()->hasRole(['super', 'municipal_admin']))
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('admin.child.import.form') }}"><span class="menu-title">Importar Infantes</span></a>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
 
                     <a href="{{ route('admin.attendance.report') }}" class="menu-item {{ in_array($page, ['']) ? 'here' : '' }} menu-lg-down-accordion me-0 me-lg-2">
                         <span class="menu-link">
@@ -39,6 +51,7 @@
                         </span>
                     </a>
 
+                    @if(Auth::user()->hasRole(['super', 'municipal_admin']))
                     <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
                          class="menu-item {{ in_array($page, ['']) ? 'here' : '' }} menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
                         <span class="menu-link">
@@ -57,6 +70,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
 
                     <a href="{{ route('admin.incident.manage') }}" class="menu-item {{ in_array($page, ['']) ? 'here' : '' }} menu-lg-down-accordion me-0 me-lg-2">
                         <span class="menu-link">
@@ -64,6 +78,7 @@
                         </span>
                     </a>
 
+                    @if(Auth::user()->hasRole('super'))
                     <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
                          class="menu-item {{ in_array($page, ['']) ? 'here' : '' }} menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
                         <span class="menu-link">
@@ -80,11 +95,9 @@
                             <div class="menu-item">
                                 <a class="menu-link" href="{{ route('admin.activity_log.manage') }}"><span class="menu-title">Logs de Auditoría</span></a>
                             </div>
-                            <div class="menu-item">
-                                <a class="menu-link" href="{{ route('admin.child.import.form') }}"><span class="menu-title">Importar Infantes</span></a>
-                            </div>
                         </div>
                     </div>
+                    @endif
                     
                 </div>
             </div>
