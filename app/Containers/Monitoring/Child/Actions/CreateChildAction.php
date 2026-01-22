@@ -19,6 +19,7 @@ use App\Containers\Monitoring\ChildEnrollment\Models\ChildEnrollment;
 use App\Containers\Monitoring\Child\UI\API\Requests\CreateChildRequest;
 use App\Ship\Parents\Actions\Action as ParentAction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 final class CreateChildAction extends ParentAction
@@ -212,26 +213,19 @@ final class CreateChildAction extends ParentAction
     {
         $file = $request->file('avatar');
 
-        if (!$file && $request->has('avatar')) {
-            $value = $request->input('avatar');
-            if (is_array($value)) {
-                $file = $value[0] ?? null;
-            }
-        }
-
-        if (!$file && $request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-        }
-
         if (is_array($file)) {
             $file = $file[0] ?? null;
         }
 
-        if ($file && $file->isValid()) {
-            $fileNamePrefix = Str::slug($child->full_name);
-            $path = $this->processChildAvatarTask->run($file, $child->avatar, $fileNamePrefix);
-            $child->avatar = $path;
-            $child->save();
+        if ($file instanceof \Illuminate\Http\UploadedFile && $file->isValid()) {
+            try {
+                $fileNamePrefix = Str::slug($child->full_name);
+                $path = $this->processChildAvatarTask->run($file, $child->avatar, $fileNamePrefix);
+                $child->avatar = $path;
+                $child->save();
+            } catch (\Exception $e) {
+                Log::error('Error processing child avatar: ' . $e->getMessage());
+            }
         }
     }
 

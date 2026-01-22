@@ -309,22 +309,11 @@ final class UpdateChildAction extends ParentAction
     {
         $file = $request->file('avatar');
 
-        if (!$file && $request->has('avatar')) {
-            $value = $request->input('avatar');
-            if (is_array($value)) {
-                $file = $value[0] ?? null;
-            }
-        }
-
-        if (!$file && $request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-        }
-
         if (is_array($file)) {
             $file = $file[0] ?? null;
         }
 
-        if ($file && $file->isValid()) {
+        if ($file instanceof \Illuminate\Http\UploadedFile && $file->isValid()) {
             try {
                 $fileNamePrefix = Str::slug($child->full_name);
                 $path = $this->processChildAvatarTask->run($file, $child->avatar, $fileNamePrefix);
