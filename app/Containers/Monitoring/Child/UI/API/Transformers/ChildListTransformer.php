@@ -31,7 +31,7 @@ final class ChildListTransformer extends ParentTransformer
             'gender' => $child->gender,
             'birth_date' => $child->birth_date,
             'age' => $child->age,
-            'avatar' => $avatarUrl,
+            'avatar_url' => $avatarUrl,
 
             // Location info
             'city' => $child->city,

@@ -36,7 +36,7 @@ final class ChildSummaryTransformer extends ParentTransformer
                 'maternal_last_name' => $child->maternal_last_name,
                 'full_name' => $child->full_name,
                 'birth_date' => $child->birth_date,
-                'avatar' => $avatarUrl,
+                'avatar_url' => $avatarUrl,
                 'age' => $child->age,
                 'gender' => $child->gender,
                 'state' => $child->state,

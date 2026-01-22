@@ -39,7 +39,7 @@ final class ChildTransformer extends ParentTransformer
                 'gender' => $child->gender,
                 'birth_date' => $child->birth_date,
                 'age' => $child->age,
-                'avatar' => $avatarUrl,
+                'avatar_url' => $avatarUrl,
                 'language' => $child->language,
                 'country' => $child->country,
                 'state' => $child->state,
