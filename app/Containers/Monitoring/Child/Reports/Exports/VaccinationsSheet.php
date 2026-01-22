@@ -75,7 +75,7 @@ class VaccinationsSheet implements FromArray, WithTitle, WithEvents
         }
         
         if ($vaccinesData->isEmpty()) {
-            $data[] = ['No hay vacunas registradas'];
+            // $data[] = ['No hay vacunas registradas'];
         }
         
         return $data;

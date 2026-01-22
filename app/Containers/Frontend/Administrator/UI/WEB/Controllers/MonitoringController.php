@@ -6,6 +6,8 @@ use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\DetailListD
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\DetailListNutritionAssessmentsByChildRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\GetDevelopmentEvaluationIndicatorsRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\ListDevelopmentEvaluationsByChildRequest;
+use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\ListIncidentsByChildRequest;
+use App\Containers\Monitoring\IncidentReport\Actions\ListIncidentsByChildAction;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\ListNutritionAssessmentsByChildRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\ListVaccinationTrackingByChildRequest;
 use App\Containers\Frontend\Administrator\UI\WEB\Requests\Monitoring\SummarizeByChildRequest;
@@ -301,8 +303,8 @@ final class MonitoringController extends WebController
             ? round(($appliedDoses / $totalDoses) * 100, 1) 
             : 0;
         
-        // Próximas vacunas (próximas 5)
-        $upcomingVaccines = $child->getUpcomingVaccineDoses(6)
+        // Próximas vacunas (próximas 5 vacunas a aplicar, sin límite de tiempo cercano)
+        $upcomingVaccines = $child->getUpcomingVaccineDoses(240) // 20 años para asegurar que traiga las próximas
             ->take(5)
             ->map(function($dose) {
                 return [
@@ -428,6 +430,27 @@ final class MonitoringController extends WebController
         $child = app(FindChildByIdTask::class)->run($childId);
         
         return app(GenerateChildSummaryReportAction::class)->run($child);
+    }
+
+    public function listIncidentsByChild(ListIncidentsByChildRequest $request): View
+    {
+        $page_title = 'Reportes de Incidentes';
+
+        request()->merge([
+            'page' => $request->get('page', 1),
+            'limit' => $request->get('limit', 100),
+        ]);
+
+        $childId = $request->route('child_id');
+        if (!$childId) {
+            throw new \InvalidArgumentException('child_id is required in the route');
+        }
+
+        $child = app(FindChildByIdTask::class)->run($childId);
+        
+        $items = app(ListIncidentsByChildAction::class)->run($request);
+
+        return view('frontend@administrator::monitoring.list-incidents-by-child', compact('page_title', 'items', 'child'));
     }
 
 }

@@ -68,6 +68,9 @@
                     <li class="nav-item">
                         <a href="{{ route('admin.monitoring.list-development-evaluations-by-child', ['child_id' => $child->id]) }}" class="nav-link text-active-primary pb-4">Desarrollo Infantil</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.monitoring.list-incidents-by-child', ['child_id' => $child->id]) }}" class="nav-link text-active-primary pb-4">Incidentes</a>
+                    </li>
                 </ul>
                 <!--end::Nav tabs-->
 
@@ -118,8 +121,12 @@
                                     <span class="text-gray-800 fw-bold fs-2x lh-1">{{ $developmentStats['total'] }}</span>
                                 </div>
                                 <div class="d-flex align-items-center pt-2">
-                                    @if($developmentStats['average_score'] !== null)
-                                        <span class="badge badge-light-primary fs-7">Promedio: {{ number_format($developmentStats['average_score'], 1) }}%</span>
+                                    @if($developmentStats['total'] > 0)
+                                        @if($developmentStats['average_score'] !== null)
+                                            <span class="badge badge-light-primary fs-7">Promedio: {{ number_format($developmentStats['average_score'], 1) }}%</span>
+                                        @else
+                                            <span class="badge badge-light-primary fs-7">Registradas</span>
+                                        @endif
                                     @else
                                         <span class="badge badge-light-secondary fs-7">Sin evaluaciones</span>
                                     @endif

@@ -63,9 +63,12 @@
                             <a href="{{ route('admin.monitoring.list-vaccination-tracking-by-child', ['child_id' => $child->id]) }}" class="nav-link text-active-primary pb-4" href="">Vacunas</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.monitoring.list-development-evaluations-by-child', ['child_id' => $child->id]) }}" class="nav-link text-active-primary pb-4" href="">Desarrollo Infantil</a>
-                        </li>
-                    </ul>
+                        <a href="{{ route('admin.monitoring.list-development-evaluations-by-child', ['child_id' => $child->id]) }}" class="nav-link text-active-primary pb-4">Desarrollo Infantil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.monitoring.list-incidents-by-child', ['child_id' => $child->id]) }}" class="nav-link text-active-primary pb-4">Incidentes</a>
+                    </li>
+                </ul>
               
                     <div class="tab-content" id="myTabContent">
                       

@@ -76,7 +76,7 @@ class NutritionalAssessmentsSheet implements FromArray, WithTitle, WithEvents
         }
         
         if ($assessments->isEmpty()) {
-            $data[] = ['No hay evaluaciones nutricionales registradas'];
+            // $data[] = ['No hay evaluaciones nutricionales registradas'];
         }
         
         return $data;

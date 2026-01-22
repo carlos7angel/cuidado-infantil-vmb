@@ -128,7 +128,7 @@ class DevelopmentEvaluationsSheet implements FromArray, WithTitle, WithEvents
         }
         
         if ($evaluations->isEmpty()) {
-            $data[] = ['No hay evaluaciones de desarrollo registradas'];
+            // $data[] = ['No hay evaluaciones de desarrollo registradas'];
         }
         
         return $data;

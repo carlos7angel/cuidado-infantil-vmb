@@ -26,6 +26,7 @@ class ChildSummaryReportExport implements WithMultipleSheets
             new NutritionalAssessmentsSheet($this->child),
             new VaccinationsSheet($this->child),
             new DevelopmentEvaluationsSheet($this->child),
+            new IncidentsSheet($this->child),
         ];
     }
 }
