@@ -142,8 +142,6 @@ final class CreateChildAction extends ParentAction
                 'outstanding_skills' => $data['outstanding_skills'] ?? null,
                 'nutritional_problems' => $data['nutritional_problems'] ?? null,
                 'other_observations' => $data['other_observations'] ?? null,
-                'incident_history' => $data['incident_history'] ?? null,
-                'pets' => $data['pets'] ?? null,
             ];
             $this->createChildMedicalRecordTask->run($medicalRecordData);
 
