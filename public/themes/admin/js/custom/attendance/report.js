@@ -105,11 +105,8 @@ var KTAttendanceReport = function () {
             }
             
             var downloadBtn = $(this);
-            var blockUI = new KTBlockUI(downloadBtn[0], {
-                message: '<div class="blockui-message"><span class="spinner-border text-white" role="status"></span> <span class="ms-2">Descargando...</span></div>',
-            });
-            
-            blockUI.block();
+            downloadBtn.attr('data-kt-indicator', 'on');
+            downloadBtn.prop('disabled', true);
             
             // Construir URL con parámetros
             var form = $('#kt_attendance_report_form');
@@ -135,7 +132,8 @@ var KTAttendanceReport = function () {
             // El bloqueo se liberará automáticamente cuando se complete la descarga
             // pero por si acaso, lo liberamos después de un tiempo
             setTimeout(function() {
-                blockUI.release();
+                downloadBtn.removeAttr('data-kt-indicator');
+                downloadBtn.prop('disabled', false);
             }, 5000);
         });
         

@@ -17,15 +17,13 @@ class EducatorUserCreatedEmail extends ParentMail
 
     public function build()
     {
-        $url = route('web.server.info');
         return $this->view('appSection@user::educatorUserCreated')
             ->subject('Habilitación de cuenta | ' . config('app.name'))
             ->to($this->user->email, $this->user->name)
             ->with([
                 'user' => $this->user,
                 'educator' => $this->educator,
-                'password' => $this->password,
-                'url' => $url,
+                'password' => $this->password
             ]);
     }
 }

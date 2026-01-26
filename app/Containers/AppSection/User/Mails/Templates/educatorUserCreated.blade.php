@@ -19,8 +19,7 @@
                         </div>
                         <div style="text-align:start; background: #F9F9F9; border-radius: 12px; padding:15px 30px">
                             <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 14px; font-weight:700">Usuario: {!! $user->email !!}</p>
-                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 14px; font-weight:700">Contraseña: {!! $password !!}</p>   
-                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 14px; font-weight:700">URL Servidor: {!! $url !!}</p>
+                            <p style="margin-top:0; margin-bottom:0px; color:#181C32; font-size: 14px; font-weight:700">Contraseña: {!! $password !!}</p>
                         </div>
                     </div>
                 </td>

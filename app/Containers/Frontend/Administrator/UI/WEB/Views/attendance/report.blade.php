@@ -36,7 +36,7 @@
             <div class="card-body p-0">
                 <form method="GET" action="{{ route('admin.attendance.report') }}" id="kt_attendance_report_form" data-download-url="{{ route('admin.attendance.report.download') }}">
                     <div class="row g-8 mb-5">
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <label class="fs-6 form-label fw-bold text-gray-900">Centro de Cuidado Infantil</label>
                             <select class="form-select form-select-solid" name="childcare_center_id" id="childcare_center_id" data-control="select2" data-hide-search="false" data-allow-clear="true" data-placeholder="Todos los centros">
                                 <option value="">Todos los centros</option>
@@ -65,14 +65,23 @@
                                 <option value="simplified" {{ old('report_type', request('report_type')) == 'simplified' ? 'selected' : '' }}>Simplificado (1/0)</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 d-flex align-items-end gap-2">
+                        <div class="col-lg-4 d-flex align-items-end gap-2">
                             <button type="submit" name="action" value="generate" class="btn btn-sm btn-primary flex-1">
                                 <i class="ki-outline ki-file-up fs-2"></i>
                                 Generar Reporte
                             </button>
                             <button type="button" name="action" value="download" id="kt_attendance_download_btn" class="btn btn-sm btn-success flex-1">
-                                <i class="ki-outline ki-file-down fs-2"></i>
-                                Descargar
+                                <span class="indicator-label">
+                                    <span class="d-flex align-items-center justify-content-center">
+                                        <i class="ki-outline ki-file-down fs-2 me-1"></i>
+                                        Descargar
+                                    </span>
+                                </span>
+                                <span class="indicator-progress">
+                                    <span class="d-flex align-items-center justify-content-center">
+                                        Descargando... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                    </span>
+                                </span>
                             </button>
                         </div>
                     </div>
